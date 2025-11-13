@@ -459,8 +459,23 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     if (currentIndex + 1 < steps.length) {
       const nextIndex = currentIndex + 1
       setCurrentStepIndex(nextIndex)
-      updateStep(nextIndex, { status: "running", isExpanded: true })
-      executeStep(nextIndex)
+      
+      // 使用函数式状态更新，获取最新的步骤状态
+      setSteps((prevSteps) => {
+        const newSteps = [...prevSteps]
+        newSteps[nextIndex] = {
+          ...newSteps[nextIndex],
+          status: "running",
+          isExpanded: true,
+        }
+        
+        // 将更新后的步骤传递给 executeStep，避免竞态条件
+        setTimeout(() => {
+          executeStep(nextIndex, newSteps)
+        }, 0)
+        
+        return newSteps
+      })
     } else {
       setIsWorkflowRunning(false)
     }
@@ -533,18 +548,24 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
 
     // 继续执行
     setCurrentStepIndex(nextIndex)
-    setSteps((prevSteps) => {
-      const newSteps = [...prevSteps]
-      newSteps[nextIndex].status = "running"
-      newSteps[nextIndex].isExpanded = true
-      return newSteps
-    })
     setIsWorkflowRunning(true)
     
-    // 延迟执行，确保状态更新完成
-    setTimeout(() => {
-      executeStep(nextIndex)
-    }, 100)
+    // 使用函数式状态更新，并将更新后的步骤传递给 executeStep
+    setSteps((prevSteps) => {
+      const newSteps = [...prevSteps]
+      newSteps[nextIndex] = {
+        ...newSteps[nextIndex],
+        status: "running",
+        isExpanded: true,
+      }
+      
+      // 延迟执行，确保状态更新完成
+      setTimeout(() => {
+        executeStep(nextIndex, newSteps)
+      }, 100)
+      
+      return newSteps
+    })
   }
 
   // 加载中状态
