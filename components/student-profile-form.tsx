@@ -4,22 +4,48 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
+import type { StudentProfile } from "@/lib/types/dreambridge-api-types"
 
+/**
+ * 学生画像表单组件
+ * 
+ * 用于用户确认和编辑从音频提取的学生画像信息
+ */
 interface StudentProfileFormProps {
-  profile: any
-  onContinue: (updatedProfile: any) => void
+  profile: StudentProfile
+  onContinue: (updatedProfile: StudentProfile) => void
 }
 
 export function StudentProfileForm({ profile: initialProfile, onContinue }: StudentProfileFormProps) {
   const [profile, setProfile] = useState(initialProfile)
   const [loading, setLoading] = useState(false)
 
-  // 根据分类与字段更新嵌套对象，保持不可变数据结构
-  const updateField = (category: string, field: string, value: any) => {
+  // 更新嵌套字段
+  const updateBasicInfo = (field: keyof StudentProfile["basic_info"], value: any) => {
     setProfile({
       ...profile,
-      [category]: {
-        ...profile[category],
+      basic_info: {
+        ...profile.basic_info,
+        [field]: value,
+      },
+    })
+  }
+
+  const updateAcademic = (field: string, value: any) => {
+    setProfile({
+      ...profile,
+      academic: {
+        ...profile.academic,
+        [field]: value,
+      },
+    })
+  }
+
+  const updateGoals = (field: string, value: any) => {
+    setProfile({
+      ...profile,
+      goals: {
+        ...profile.goals,
         [field]: value,
       },
     })
@@ -46,22 +72,30 @@ export function StudentProfileForm({ profile: initialProfile, onContinue }: Stud
           <div>
             <label className="text-sm font-medium text-foreground block mb-2">学生姓名</label>
             <Input
-              value={profile["基本信息"]?.姓名 || ""}
-              onChange={(e) => updateField("基本信息", "姓名", e.target.value)}
+              value={profile.basic_info?.name || ""}
+              onChange={(e) => updateBasicInfo("name", e.target.value)}
             />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground block mb-2">当前学校</label>
             <Input
-              value={profile["基本信息"]?.当前学校 || ""}
-              onChange={(e) => updateField("基本信息", "当前学校", e.target.value)}
+              value={profile.basic_info?.school || ""}
+              onChange={(e) => updateBasicInfo("school", e.target.value)}
             />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground block mb-2">年级</label>
             <Input
-              value={profile["基本信息"]?.年级 || ""}
-              onChange={(e) => updateField("基本信息", "年级", e.target.value)}
+              value={profile.basic_info?.grade || ""}
+              onChange={(e) => updateBasicInfo("grade", e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground block mb-2">年龄</label>
+            <Input
+              type="number"
+              value={profile.basic_info?.age || ""}
+              onChange={(e) => updateBasicInfo("age", Number.parseInt(e.target.value) || undefined)}
             />
           </div>
         </div>
@@ -76,24 +110,34 @@ export function StudentProfileForm({ profile: initialProfile, onContinue }: Stud
             <Input
               type="number"
               step="0.1"
-              value={profile["学术成绩"]?.GPA || ""}
-              onChange={(e) => updateField("学术成绩", "GPA", Number.parseFloat(e.target.value) || 0)}
+              value={profile.academic?.gpa || ""}
+              onChange={(e) => updateAcademic("gpa", Number.parseFloat(e.target.value) || 0)}
             />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground block mb-2">托福成绩</label>
             <Input
               type="number"
-              value={profile["学术成绩"]?.托福成绩 || ""}
-              onChange={(e) => updateField("学术成绩", "托福成绩", Number.parseInt(e.target.value) || 0)}
+              value={profile.academic?.test_scores?.toefl || ""}
+              onChange={(e) =>
+                updateAcademic("test_scores", {
+                  ...profile.academic?.test_scores,
+                  toefl: Number.parseInt(e.target.value) || 0,
+                })
+              }
             />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground block mb-2">SAT 成绩</label>
             <Input
               type="number"
-              value={profile["学术成绩"]?.SAT || ""}
-              onChange={(e) => updateField("学术成绩", "SAT", Number.parseInt(e.target.value) || 0)}
+              value={profile.academic?.test_scores?.sat || ""}
+              onChange={(e) =>
+                updateAcademic("test_scores", {
+                  ...profile.academic?.test_scores,
+                  sat: Number.parseInt(e.target.value) || 0,
+                })
+              }
               placeholder="待考"
             />
           </div>
@@ -105,24 +149,27 @@ export function StudentProfileForm({ profile: initialProfile, onContinue }: Stud
         <h3 className="font-bold text-foreground text-lg">申请意向</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium text-foreground block mb-2">目标排名</label>
+            <label className="text-sm font-medium text-foreground block mb-2">目标学校层级</label>
             <Input
-              value={profile["申请意向"]?.目标排名 || ""}
-              onChange={(e) => updateField("申请意向", "目标排名", e.target.value)}
+              value={profile.goals?.target_school_tier || ""}
+              onChange={(e) => updateGoals("target_school_tier", e.target.value)}
+              placeholder="例如: TOP 20"
             />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground block mb-2">专业方向</label>
             <Input
-              value={profile["申请意向"]?.专业方向 || ""}
-              onChange={(e) => updateField("申请意向", "专业方向", e.target.value)}
+              value={profile.goals?.target_majors?.[0] || ""}
+              onChange={(e) => updateGoals("target_majors", [e.target.value])}
+              placeholder="例如: 计算机科学"
             />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground block mb-2">时间规划</label>
             <Input
-              value={profile["申请意向"]?.时间规划 || ""}
-              onChange={(e) => updateField("申请意向", "时间规划", e.target.value)}
+              value={profile.goals?.application_timeline || ""}
+              onChange={(e) => updateGoals("application_timeline", e.target.value)}
+              placeholder="例如: 2024年秋季入学"
             />
           </div>
         </div>
