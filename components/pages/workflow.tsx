@@ -395,8 +395,13 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         showResult: true,
       })
       
+      addLog(index, "准备进入下一步...")
+      
       // 自动进入下一步
-      setTimeout(() => proceedToNextStep(index), 1000)
+      setTimeout(() => {
+        console.log(`[步骤${index+1}] 完成，准备进入步骤${index+2}`)
+        proceedToNextStep(index)
+      }, 1000)
       
     } catch (error) {
       throw new Error(`生成推荐失败: ${error instanceof Error ? error.message : "未知错误"}`)
@@ -475,29 +480,41 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
    * 进入下一个步骤
    */
   const proceedToNextStep = (currentIndex: number) => {
-    if (currentIndex + 1 < steps.length) {
-      const nextIndex = currentIndex + 1
-      setCurrentStepIndex(nextIndex)
+    const nextIndex = currentIndex + 1
+    
+    console.log(`[proceedToNextStep] 当前步骤: ${currentIndex}, 下一步: ${nextIndex}`)
+    
+    // 使用函数式状态更新，获取最新的步骤状态
+    setSteps((prevSteps) => {
+      console.log(`[proceedToNextStep] prevSteps.length: ${prevSteps.length}`)
       
-      // 使用函数式状态更新，获取最新的步骤状态
-      setSteps((prevSteps) => {
-        const newSteps = [...prevSteps]
-        newSteps[nextIndex] = {
-          ...newSteps[nextIndex],
-          status: "running",
-          isExpanded: true,
-        }
-        
-        // 将更新后的步骤传递给 executeStep，避免竞态条件
-        setTimeout(() => {
-          executeStep(nextIndex, newSteps)
-        }, 0)
-        
-        return newSteps
-      })
-    } else {
-      setIsWorkflowRunning(false)
-    }
+      // 检查是否还有下一步
+      if (nextIndex >= prevSteps.length) {
+        console.log(`[proceedToNextStep] 没有更多步骤，工作流结束`)
+        // 在回调外设置
+        setTimeout(() => setIsWorkflowRunning(false), 0)
+        return prevSteps
+      }
+      
+      console.log(`[proceedToNextStep] 启动步骤 ${nextIndex}: ${prevSteps[nextIndex]?.name}`)
+      
+      // 在回调外设置
+      setTimeout(() => setCurrentStepIndex(nextIndex), 0)
+      
+      const newSteps = [...prevSteps]
+      newSteps[nextIndex] = {
+        ...newSteps[nextIndex],
+        status: "running",
+        isExpanded: true,
+      }
+      
+      // 将更新后的步骤传递给 executeStep，避免竞态条件
+      setTimeout(() => {
+        executeStep(nextIndex, newSteps)
+      }, 50)
+      
+      return newSteps
+    })
   }
 
   /**
