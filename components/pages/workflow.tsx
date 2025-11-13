@@ -329,11 +329,30 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     
     try {
       // 获取上一步的结果（JSON 字符串）
-      const jsonString = steps[index - 1].result
+      let jsonString = steps[index - 1].result
       
       if (!jsonString) {
         throw new Error("未找到画像数据")
       }
+
+      // 清理 markdown 代码块标记（如果存在）
+      // 移除开头的 ```json 或 ```
+      jsonString = jsonString.trim()
+      if (jsonString.startsWith('```json')) {
+        jsonString = jsonString.slice(7) // 移除 "```json"
+      } else if (jsonString.startsWith('```')) {
+        jsonString = jsonString.slice(3) // 移除 "```"
+      }
+      
+      // 移除结尾的 ```
+      if (jsonString.endsWith('```')) {
+        jsonString = jsonString.slice(0, -3)
+      }
+      
+      // 再次清理空白字符
+      jsonString = jsonString.trim()
+      
+      addLog(index, "清理 markdown 标记...")
 
       // 解析 JSON
       const profile: StudentProfile = JSON.parse(jsonString)
