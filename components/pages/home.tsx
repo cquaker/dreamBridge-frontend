@@ -1,72 +1,86 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "@/components/theme-provider"
 import { ProjectCard } from "@/components/project-card"
 import { NewProjectModal } from "@/components/new-project-modal"
-import { Moon, Sun, Plus } from "lucide-react"
-
-// 模拟项目列表，用来驱动页面展示与交互
-const MOCK_PROJECTS = [
-  {
-    id: "1",
-    name: "李明 - 美国留学计划",
-    audioFile: "interview_liming.mp3",
-    audioSize: "5.2 MB",
-    audioDuration: "5:23",
-    status: "completed" as const,
-    createdAt: "2025-11-10",
-  },
-  {
-    id: "2",
-    name: "王丽 - 英国申请方案",
-    audioFile: "interview_wangli.mp3",
-    audioSize: "4.8 MB",
-    audioDuration: "4:45",
-    status: "running" as const,
-    createdAt: "2025-11-12",
-  },
-  {
-    id: "3",
-    name: "张浩 - 硕士申请规划",
-    audioFile: "interview_zhanghao.mp3",
-    audioSize: "6.1 MB",
-    audioDuration: "6:12",
-    status: "pending" as const,
-    createdAt: "2025-11-11",
-  },
-]
+import { Moon, Sun, Plus, RefreshCw } from "lucide-react"
+import { apiClient } from "@/lib/api/client"
+import { useToast } from "@/hooks/use-toast"
+import type { AudioItem } from "@/lib/types/dreambridge-api-types"
 
 export function Home() {
   const router = useRouter()
   const { isDark, toggleTheme } = useTheme()
-  const [projects, setProjects] = useState(MOCK_PROJECTS)
+  const { toast } = useToast()
+  const [audios, setAudios] = useState<AudioItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [showNewProjectModal, setShowNewProjectModal] = useState(false)
 
-  const handleCreateProject = (projectData: any) => {
-    const newProject = {
-      id: String(projects.length + 1),
-      name: projectData.name,
-      audioFile: projectData.audioFile.name,
-      audioSize: (projectData.audioFile.size / 1024 / 1024).toFixed(1) + " MB",
-      audioDuration: "0:00",
-      status: "pending" as const,
-      createdAt: new Date().toISOString().split("T")[0],
+  // 从后端获取项目列表
+  const fetchProjects = async (showLoading = true) => {
+    if (showLoading) {
+      setLoading(true)
+    } else {
+      setRefreshing(true)
     }
-    setProjects([newProject, ...projects])
+
+    try {
+      const response = await apiClient.listAudios()
+
+      if (!response.success || !response.data) {
+        throw new Error(response.error?.message || "获取项目列表失败")
+      }
+
+      setAudios(response.data.items)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "加载失败，请检查网络连接"
+      
+      toast({
+        title: "加载失败",
+        description: errorMessage,
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
+  // 页面加载时获取项目列表
+  useEffect(() => {
+    fetchProjects()
+  }, [])
+
+  // 创建项目（上传音频）
+  const handleCreateProject = (audio: AudioItem) => {
+    // 添加到列表顶部
+    setAudios([audio, ...audios])
     setShowNewProjectModal(false)
-    // 创建后立即跳转至对应的工作流路由，方便继续执行智能流程
-    router.push(`/project/${newProject.id}`)
+    
+    // 创建后立即跳转至工作流页面
+    router.push(`/project/${encodeURIComponent(audio.name)}`)
   }
 
-  const handleDeleteProject = (id: string) => {
-    setProjects(projects.filter((p) => p.id !== id))
+  // 删除项目（暂不实现，后端需要提供 DELETE API）
+  const handleDeleteProject = (audioName: string) => {
+    toast({
+      title: "功能开发中",
+      description: "删除功能即将上线",
+    })
   }
 
-  const handleProjectClick = (id: string) => {
-    router.push(`/project/${id}`)
+  // 点击项目卡片
+  const handleProjectClick = (audioName: string) => {
+    router.push(`/project/${encodeURIComponent(audioName)}`)
+  }
+
+  // 刷新列表
+  const handleRefresh = () => {
+    fetchProjects(false)
   }
 
   return (
@@ -80,7 +94,16 @@ export function Home() {
               </div>
               <h1 className="text-lg font-semibold text-foreground tracking-tight">学习方案工作流 Agent</h1>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="p-2 rounded-lg hover:bg-muted/50 transition-colors disabled:opacity-50"
+                aria-label="刷新列表"
+                title="刷新列表"
+              >
+                <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
               <button
                 onClick={toggleTheme}
                 className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
@@ -98,10 +121,13 @@ export function Home() {
         <div className="flex justify-between items-center mb-10">
           <div>
             <h2 className="text-3xl font-bold text-foreground tracking-tight">项目管理</h2>
-            <p className="text-sm text-muted-foreground mt-2 font-normal">{projects.length} 个项目</p>
+            <p className="text-sm text-muted-foreground mt-2 font-normal">
+              {loading ? "加载中..." : `${audios.length} 个项目`}
+            </p>
           </div>
           <Button
             onClick={() => setShowNewProjectModal(true)}
+            disabled={loading}
             className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg"
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -109,8 +135,13 @@ export function Home() {
           </Button>
         </div>
 
-        {/* 项目网格：根据列表状态切换空态或卡片 */}
-        {projects.length === 0 ? (
+        {/* 加载状态 */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+            <p className="text-sm text-muted-foreground mt-4">加载项目列表...</p>
+          </div>
+        ) : audios.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mb-4 shadow-sm">
               <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,17 +164,17 @@ export function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, index) => (
+            {audios.map((audio, index) => (
               <div
-                key={project.id}
+                key={audio.name}
                 style={{
                   animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
                 }}
               >
                 <ProjectCard
-                  project={project}
-                  onClick={() => handleProjectClick(project.id)}
-                  onDelete={() => handleDeleteProject(project.id)}
+                  audio={audio}
+                  onClick={() => handleProjectClick(audio.name)}
+                  onDelete={() => handleDeleteProject(audio.name)}
                 />
               </div>
             ))}

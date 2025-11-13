@@ -3,69 +3,113 @@
 import type React from "react"
 
 import { useState, useRef } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Upload } from "lucide-react"
+import { apiClient } from "@/lib/api/client"
+import { useToast } from "@/hooks/use-toast"
+import type { AudioItem } from "@/lib/types/dreambridge-api-types"
 
 interface NewProjectModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onCreateProject: (data: { name: string; audioFile: File }) => void
+  onCreateProject: (audio: AudioItem) => void
 }
 
 export function NewProjectModal({ open, onOpenChange, onCreateProject }: NewProjectModalProps) {
-  const [projectName, setProjectName] = useState("")
   const [audioFile, setAudioFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<string>("")
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { toast } = useToast()
 
   // 监听文件选择与拖拽，限制为单个音频文件
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // 验证文件格式
+      const validFormats = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/m4a', 'audio/mp4']
+      if (!validFormats.includes(file.type) && !file.name.match(/\.(mp3|wav|m4a|mp4)$/i)) {
+        toast({
+          title: "文件格式不支持",
+          description: "请上传 MP3、WAV、M4A 或 MP4 格式的音频文件",
+          variant: "destructive",
+        })
+        return
+      }
+      
+      // 验证文件大小（最大 50MB）
+      if (file.size > 50 * 1024 * 1024) {
+        toast({
+          title: "文件过大",
+          description: "音频文件不能超过 50MB",
+          variant: "destructive",
+        })
+        return
+      }
+      
       setAudioFile(file)
     }
   }
 
-  // 模拟上传耗时，请求完成后通过回调创建项目
+  // 上传音频到后端并创建项目
   const handleCreateProject = async () => {
-    if (!projectName.trim() || !audioFile) return
+    if (!audioFile) return
 
     setLoading(true)
-    // 简单的延时方法，未来可替换为真实 API 调用
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    onCreateProject({
-      name: projectName,
-      audioFile: audioFile,
-    })
-    setProjectName("")
-    setAudioFile(null)
-    setLoading(false)
+    setUploadProgress("正在上传音频文件...")
+
+    try {
+      // 上传音频文件
+      const response = await apiClient.uploadAudio(audioFile)
+
+      if (!response.success || !response.data) {
+        throw new Error(response.error?.message || "上传失败")
+      }
+
+      setUploadProgress("上传成功！")
+      
+      toast({
+        title: "创建成功",
+        description: `项目 "${audioFile.name}" 已创建`,
+      })
+
+      // 通知父组件项目已创建
+      onCreateProject(response.data)
+
+      // 重置表单
+      setAudioFile(null)
+      setUploadProgress("")
+      onOpenChange(false)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "上传失败，请检查网络连接"
+      
+      toast({
+        title: "创建失败",
+        description: errorMessage,
+        variant: "destructive",
+      })
+      
+      setUploadProgress("")
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const isValid = projectName.trim().length > 0 && audioFile !== null
+  const isValid = audioFile !== null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle id="project-modal-title">新建项目</DialogTitle>
+          <DialogTitle>新建项目</DialogTitle>
+          <DialogDescription>
+            上传音频文件开始创建新的学习方案分析项目
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6" id="project-modal-description">
-          {/* 项目名称输入 */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">项目名称</label>
-            <Input
-              placeholder="输入项目名称，如：李明 - 美国留学计划"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              className="h-10"
-            />
-            {projectName && projectName.length < 1 && <p className="text-xs text-destructive mt-1">项目名称不能为空</p>}
-          </div>
-
+        <div className="space-y-6">
           {/* 音频文件上传区域 */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">上传音频文件</label>
@@ -115,6 +159,13 @@ export function NewProjectModal({ open, onOpenChange, onCreateProject }: NewProj
             )}
           </div>
 
+          {/* 上传进度提示 */}
+          {uploadProgress && (
+            <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+              <p className="text-sm text-blue-900 dark:text-blue-100">{uploadProgress}</p>
+            </div>
+          )}
+
           {/* 操作按钮：取消/创建 */}
           <div className="flex gap-2 justify-end pt-4">
             <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
@@ -125,7 +176,7 @@ export function NewProjectModal({ open, onOpenChange, onCreateProject }: NewProj
               disabled={!isValid || loading}
               className="bg-blue-600 hover:bg-blue-700"
             >
-              {loading ? "创建中..." : "创建项目"}
+              {loading ? "上传中..." : "创建项目"}
             </Button>
           </div>
         </div>

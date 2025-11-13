@@ -2,33 +2,70 @@
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Trash2, ChevronRight, Calendar, Clock } from "lucide-react"
-
-interface Project {
-  id: string
-  name: string
-  audioFile: string
-  audioSize: string
-  audioDuration: string
-  status: "pending" | "running" | "completed"
-  createdAt: string
-}
+import { Trash2, ChevronRight, Calendar, FileAudio } from "lucide-react"
+import type { AudioItem } from "@/lib/types/dreambridge-api-types"
 
 interface ProjectCardProps {
-  project: Project
+  audio: AudioItem
   onClick: () => void
   onDelete: () => void
 }
 
+// 根据音频处理状态计算项目状态
+type ProjectStatus = "pending" | "processing" | "completed"
+
+function getProjectStatus(audio: AudioItem): ProjectStatus {
+  // 如果已有报告，说明处理完成
+  if (audio.has_report) {
+    return "completed"
+  }
+  // 如果有转录或画像，说明正在处理
+  if (audio.has_transcript || audio.has_profile) {
+    return "processing"
+  }
+  // 否则是待开始
+  return "pending"
+}
+
 // 各状态对应的文案与颜色配置，便于统一样式
-const STATUS_CONFIG = {
+const STATUS_CONFIG: Record<ProjectStatus, { label: string; color: string; dotColor: string }> = {
   pending: { label: "待开始", color: "bg-slate-400", dotColor: "bg-slate-400" },
-  running: { label: "运行中", color: "bg-blue-600", dotColor: "bg-blue-500" },
+  processing: { label: "处理中", color: "bg-blue-600", dotColor: "bg-blue-500" },
   completed: { label: "已完成", color: "bg-emerald-600", dotColor: "bg-emerald-500" },
 }
 
-export function ProjectCard({ project, onClick, onDelete }: ProjectCardProps) {
-  const statusConfig = STATUS_CONFIG[project.status]
+// 格式化日期时间
+function formatDate(dateString: string): string {
+  try {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('zh-CN', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    })
+  } catch {
+    return dateString
+  }
+}
+
+export function ProjectCard({ audio, onClick, onDelete }: ProjectCardProps) {
+  const status = getProjectStatus(audio)
+  const statusConfig = STATUS_CONFIG[status]
+  const uploadDate = formatDate(audio.uploaded_at)
+
+  // 显示处理进度
+  const getProgressInfo = () => {
+    if (audio.has_report) {
+      return "报告已生成"
+    }
+    if (audio.has_profile) {
+      return "画像已提取"
+    }
+    if (audio.has_transcript) {
+      return "转录已完成"
+    }
+    return "等待处理"
+  }
 
   return (
     <Card
@@ -37,22 +74,24 @@ export function ProjectCard({ project, onClick, onDelete }: ProjectCardProps) {
     >
       <div className="mb-5 flex items-start justify-between">
         <div className="flex-1">
-          <h3 className="text-base font-semibold text-foreground mb-3 line-clamp-2 tracking-tight">{project.name}</h3>
+          <h3 className="text-base font-semibold text-foreground mb-3 line-clamp-2 tracking-tight">
+            {audio.name}
+          </h3>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 opacity-60" />
-              <span className="font-normal">{project.createdAt}</span>
+              <span className="font-normal">{uploadDate}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 opacity-60" />
-              <span className="font-normal">{project.audioDuration}</span>
+              <FileAudio className="w-3.5 h-3.5 opacity-60" />
+              <span className="font-normal">{getProgressInfo()}</span>
             </div>
           </div>
         </div>
         {/* 状态徽章：展示当前项目进度 */}
         <div className="flex flex-col items-end gap-2">
           <div className="flex items-center gap-2">
-            <div className={`${statusConfig.dotColor} w-2 h-2 rounded-full animate-pulse`}></div>
+            <div className={`${statusConfig.dotColor} w-2 h-2 rounded-full ${status === 'processing' ? 'animate-pulse' : ''}`}></div>
             <span
               className={`${statusConfig.color} text-white px-3 py-1 rounded-md text-xs font-semibold whitespace-nowrap shadow-sm`}
             >
@@ -62,10 +101,34 @@ export function ProjectCard({ project, onClick, onDelete }: ProjectCardProps) {
         </div>
       </div>
 
-      {/* 文件信息：音频文件名与体积 */}
+      {/* 文件信息与处理状态 */}
       <div className="mb-5 pt-4 border-t border-border/40">
-        <p className="text-xs text-muted-foreground font-normal">{project.audioFile}</p>
-        <p className="text-xs text-muted-foreground mt-1.5 font-normal">{project.audioSize}</p>
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span className="text-muted-foreground">转录：</span>
+            <span className={audio.has_transcript ? "text-green-600 font-medium" : "text-muted-foreground"}>
+              {audio.has_transcript ? "✓" : "—"}
+            </span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">画像：</span>
+            <span className={audio.has_profile ? "text-green-600 font-medium" : "text-muted-foreground"}>
+              {audio.has_profile ? "✓" : "—"}
+            </span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">报告：</span>
+            <span className={audio.has_report ? "text-green-600 font-medium" : "text-muted-foreground"}>
+              {audio.has_report ? "✓" : "—"}
+            </span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">PPT：</span>
+            <span className={audio.has_ppt ? "text-green-600 font-medium" : "text-muted-foreground"}>
+              {audio.has_ppt ? "✓" : "—"}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* 操作按钮：删除或查看详情 */}
