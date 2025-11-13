@@ -206,14 +206,21 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     newSteps[index].isExpanded = true
     setSteps(newSteps)
     setIsWorkflowRunning(true)
-    executeStep(index)
+    executeStep(index, newSteps)
   }
 
   /**
    * 执行指定步骤
    */
-  const executeStep = async (index: number) => {
-    const step = steps[index]
+  const executeStep = async (index: number, currentSteps?: StepState[]) => {
+    // 使用传入的 steps 或当前的 state
+    const stepsToUse = currentSteps || steps
+    const step = stepsToUse[index]
+    
+    if (!step) {
+      console.error(`步骤 ${index} 未找到`)
+      return
+    }
     
     try {
       switch (step.id) {
@@ -498,6 +505,48 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     }
   }
 
+  /**
+   * 手动继续工作流（处理错误或暂停状态）
+   */
+  const handleContinueWorkflow = () => {
+    // 查找第一个非完成状态的步骤
+    const nextIndex = steps.findIndex(
+      (s) => s.status !== "completed" && s.status !== "running"
+    )
+    
+    if (nextIndex === -1) {
+      toast({
+        title: "无可执行步骤",
+        description: "所有步骤已完成或正在执行",
+      })
+      return
+    }
+
+    // 如果是暂停状态（解析步骤），不自动继续
+    if (steps[nextIndex].status === "paused") {
+      toast({
+        title: "请先确认学生画像",
+        description: "需要您审核并确认学生信息后才能继续",
+      })
+      return
+    }
+
+    // 继续执行
+    setCurrentStepIndex(nextIndex)
+    setSteps((prevSteps) => {
+      const newSteps = [...prevSteps]
+      newSteps[nextIndex].status = "running"
+      newSteps[nextIndex].isExpanded = true
+      return newSteps
+    })
+    setIsWorkflowRunning(true)
+    
+    // 延迟执行，确保状态更新完成
+    setTimeout(() => {
+      executeStep(nextIndex)
+    }, 100)
+  }
+
   // 加载中状态
   if (loading) {
     return (
@@ -557,6 +606,14 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
                   <Loader2 className="w-3 h-3 animate-spin" />
                   运行中
                 </div>
+              )}
+              {!isWorkflowRunning && steps.length > 0 && !steps.every((s) => s.status === "completed") && (
+                <button
+                  onClick={handleContinueWorkflow}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+                >
+                  继续工作流
+                </button>
               )}
               {!isWorkflowRunning && steps.every((s) => s.status === "completed") && (
                 <div className="px-3 py-1 bg-gradient-to-r from-green-600 to-green-700 text-white text-xs rounded-full font-medium shadow-md">
