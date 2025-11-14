@@ -54,6 +54,9 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   const [isWorkflowRunning, setIsWorkflowRunning] = useState(false)
   
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  
+  // 防重复执行：跟踪正在执行的步骤
+  const executingStepsRef = useRef<Set<number>>(new Set())
 
   // 定义工作流的 6 个步骤
   const stepDefinitions = [
@@ -213,6 +216,12 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
    * 执行指定步骤
    */
   const executeStep = async (index: number, currentSteps?: StepState[]) => {
+    // 防重复执行检查
+    if (executingStepsRef.current.has(index)) {
+      console.log(`[executeStep] 步骤 ${index} 已在执行中，跳过`)
+      return
+    }
+    
     // 使用传入的 steps 或当前的 state
     const stepsToUse = currentSteps || steps
     const step = stepsToUse[index]
@@ -221,6 +230,10 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
       console.error(`步骤 ${index} 未找到`)
       return
     }
+    
+    // 标记为执行中
+    executingStepsRef.current.add(index)
+    console.log(`[executeStep] 开始执行步骤 ${index}: ${step.name}`)
     
     try {
       switch (step.id) {
@@ -257,6 +270,10 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         description: errorMessage,
         variant: "destructive",
       })
+    } finally {
+      // 执行完成，从集合中移除
+      executingStepsRef.current.delete(index)
+      console.log(`[executeStep] 步骤 ${index} 执行完成`)
     }
   }
 
