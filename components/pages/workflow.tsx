@@ -77,10 +77,14 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
 
   /**
    * 从 API 加载音频信息
+   * @param skipInitSteps 是否跳过步骤初始化（用于刷新时保持当前步骤状态）
    */
-  const loadAudioInfo = async () => {
+  const loadAudioInfo = async (skipInitSteps = false) => {
     try {
-      setLoading(true)
+      if (!skipInitSteps) {
+        setLoading(true)
+      }
+      
       const response = await apiClient.listAudios()
       
       if (!response.success || !response.data) {
@@ -101,7 +105,11 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
       }
 
       setAudio(foundAudio)
-      initializeSteps(foundAudio)
+      
+      // 只在初始加载时初始化步骤
+      if (!skipInitSteps) {
+        initializeSteps(foundAudio)
+      }
       
     } catch (error) {
       toast({
@@ -110,7 +118,9 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         variant: "destructive",
       })
     } finally {
-      setLoading(false)
+      if (!skipInitSteps) {
+        setLoading(false)
+      }
     }
   }
 
@@ -487,6 +497,15 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
             addLog(index, "✅ PPT 文稿生成完成")
             updateStep(index, { status: "completed", showResult: true })
             setIsWorkflowRunning(false)
+            
+            // 重新加载音频信息以获取所有生成文件的 URL
+            addLog(index, "刷新文件列表...")
+            loadAudioInfo(true).then(() => {
+              addLog(index, "✅ 文件列表已更新")
+            }).catch((error) => {
+              console.error("刷新文件列表失败:", error)
+            })
+            
             // 全部完成
             toast({
               title: "工作流完成！",
