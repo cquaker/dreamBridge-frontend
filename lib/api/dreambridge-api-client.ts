@@ -471,6 +471,100 @@ export class DreamBridgeClient {
     });
   }
 
+  /**
+   * 下载 PPT 文件
+   * 
+   * @param profileName 画像文件名，例如 "test-student_profile.json"
+   * @returns Promise，下载文件
+   */
+  async downloadPPT(profileName: string): Promise<void> {
+    // URL 编码 profileName，确保特殊字符（如中文）正确编码
+    const encodedProfileName = encodeURIComponent(profileName);
+    const url = `${this.baseURL}/api/profiles/${encodedProfileName}/ppt/download`;
+    
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          ...this.headers,
+        },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        let errorMessage = response.statusText || '下载失败';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.message || errorMessage;
+        } catch {
+          // 无法解析错误响应，使用默认消息
+        }
+        throw new Error(`下载失败: ${errorMessage} (${response.status})`);
+      }
+
+      // 获取文件名（从 Content-Disposition 头或使用默认名称）
+      const contentDisposition = response.headers.get('Content-Disposition');
+      console.log("Content-Disposition 头:", contentDisposition);
+      
+      // 默认文件名：将 -student_profile.json 替换为 -ppt.md
+      // 例如：山西客户-邓顾问-student_profile.json -> 山西客户-邓顾问-ppt.md
+      let filename = profileName.replace(/-student_profile\.json$/i, '-ppt.md');
+      // 如果上面没有匹配到，尝试替换 student_profile.json
+      if (filename === profileName) {
+        filename = profileName.replace(/student_profile\.json$/i, 'ppt.md');
+      }
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        if (filenameMatch && filenameMatch[1]) {
+          filename = filenameMatch[1].replace(/['"]/g, '');
+          console.log("从 Content-Disposition 获取的文件名:", filename);
+          // 处理 URL 编码的文件名
+          try {
+            filename = decodeURIComponent(filename);
+            console.log("解码后的文件名:", filename);
+          } catch {
+            // 如果解码失败，使用原始文件名
+            console.log("文件名解码失败，使用原始文件名");
+          }
+        } else {
+          console.log("Content-Disposition 中未找到文件名，使用默认文件名");
+        }
+      } else {
+        console.log("服务器未返回 Content-Disposition 头，使用默认文件名:", filename);
+      }
+      
+      console.log("最终使用的文件名:", filename);
+
+      // 创建 blob 并触发下载
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          throw new Error('下载超时，请稍后重试');
+        }
+        if (error.message.includes('Failed to fetch')) {
+          throw new Error('网络连接失败，请检查网络连接或服务器是否可访问');
+        }
+        throw error;
+      }
+      throw new Error(`下载 PPT 失败: 未知错误`);
+    }
+  }
+
   // ========================================================================
   // 流水线 API
   // ========================================================================

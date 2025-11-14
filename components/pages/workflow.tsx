@@ -92,7 +92,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
       }
 
       // 查找当前音频
-      const foundAudio = response.data.items.find((item) => item.name === audioName)
+      const foundAudio = response.data.items.find((item: AudioItem) => item.name === audioName)
       
       if (!foundAudio) {
         toast({
@@ -762,7 +762,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
                 key={step.id}
                 style={{
                   animation:
-                    step.status !== "waiting" && index <= currentStepIndex + 1
+                    index <= currentStepIndex + 1
                       ? "fadeInUp 0.5s ease-out"
                       : "none",
                 }}
@@ -792,87 +792,78 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         {/* 全部完成后的提示模块 */}
         {steps.every((s) => s.status === "completed") && (
           <div className="mt-8 p-8 bg-gradient-to-br from-indigo-50 via-blue-50 to-indigo-50 dark:from-indigo-950/40 dark:via-blue-950/40 dark:to-indigo-950/40 rounded-xl border border-indigo-200/50 dark:border-indigo-800/50 shadow-lg">
-            <div className="flex flex-col gap-6">
-              {/* 顶部标题 */}
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-br from-indigo-100 to-indigo-50 dark:from-indigo-900 dark:to-indigo-800 rounded-lg shadow-sm">
-                  <CheckCircle2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* 左侧：主要内容 */}
+              <div className="flex-1 flex flex-col gap-4">
+                {/* 图标和标题 */}
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-gradient-to-br from-indigo-100 to-indigo-50 dark:from-indigo-900 dark:to-indigo-800 rounded-lg shadow-sm flex-shrink-0">
+                    <CheckCircle2 className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-bold text-foreground mb-2">学习方案文稿已生成</h2>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      AI 已根据您的信息生成了个性化的学习方案 PPT 文稿，包含详细的学习路径、时间规划和目标分析。
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground">工作流已完成！</h2>
-                  <p className="text-muted-foreground">
-                    所有步骤已成功执行，您可以下载生成的文件
-                  </p>
-                </div>
-              </div>
 
-              {/* 文件下载列表 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {audio.transcript_url && (
-                  <a
-                    href={audio.transcript_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-white/60 dark:bg-black/30 rounded-lg border border-indigo-100/50 dark:border-indigo-900/50 hover:bg-white/80 dark:hover:bg-black/50 transition-all duration-150 shadow-sm hover:shadow-md"
-                  >
-                    <div className="text-sm font-semibold text-foreground mb-1">
-                      📄 转录字幕
-                    </div>
-                    <div className="text-xs text-muted-foreground">SRT 字幕文件</div>
-                  </a>
-                )}
-                
-                {audio.profile_url && (
-                  <a
-                    href={audio.profile_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-white/60 dark:bg-black/30 rounded-lg border border-indigo-100/50 dark:border-indigo-900/50 hover:bg-white/80 dark:hover:bg-black/50 transition-all duration-150 shadow-sm hover:shadow-md"
-                  >
-                    <div className="text-sm font-semibold text-foreground mb-1">
-                      👤 学生画像
-                    </div>
-                    <div className="text-xs text-muted-foreground">JSON 数据文件</div>
-                  </a>
-                )}
-
-                {audio.report_url && (
-                  <a
-                    href={audio.report_view_url || audio.report_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-white/60 dark:bg-black/30 rounded-lg border border-indigo-100/50 dark:border-indigo-900/50 hover:bg-white/80 dark:hover:bg-black/50 transition-all duration-150 shadow-sm hover:shadow-md"
-                  >
-                    <div className="text-sm font-semibold text-foreground mb-1">
-                      📊 推荐报告
-                    </div>
-                    <div className="text-xs text-muted-foreground">Markdown 报告</div>
-                  </a>
-                )}
-
+                {/* 下载按钮 */}
                 {audio.ppt_url && (
-                  <a
-                    href={audio.ppt_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-4 bg-white/60 dark:bg-black/30 rounded-lg border border-indigo-100/50 dark:border-indigo-900/50 hover:bg-white/80 dark:hover:bg-black/50 transition-all duration-150 shadow-sm hover:shadow-md"
-                  >
-                    <div className="text-sm font-semibold text-foreground mb-1">
-                      🎞️ PPT 文稿
-                    </div>
-                    <div className="text-xs text-muted-foreground">演示文稿内容</div>
-                  </a>
+                  <div className="flex flex-col gap-3 pt-2">
+                    <button
+                      onClick={async () => {
+                        try {
+                          const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
+                          console.log("开始下载 PPT，profileName:", profileName)
+                          await apiClient.downloadPPT(profileName)
+                          toast({
+                            title: "下载成功",
+                            description: "PPT 文稿已开始下载",
+                          })
+                        } catch (error) {
+                          console.error("下载 PPT 失败:", error)
+                          toast({
+                            title: "下载失败",
+                            description: error instanceof Error ? error.message : "未知错误",
+                            variant: "destructive",
+                          })
+                        }
+                      }}
+                      className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg active:shadow-sm flex items-center justify-center gap-2 w-fit"
+                    >
+                      <span>↓</span>
+                      <span>下载 PPT 文稿</span>
+                    </button>
+                  </div>
                 )}
               </div>
 
-              {/* 操作按钮 */}
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-indigo-200/50 dark:border-indigo-800/50">
-                <button
-                  onClick={() => router.push("/")}
-                  className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-150 shadow-md active:shadow-sm"
-                >
-                  返回首页
-                </button>
+              {/* 右侧：文稿包含内容列表 */}
+              <div className="lg:w-80 flex-shrink-0">
+                <h3 className="text-sm font-semibold text-foreground mb-4">文稿包含内容</h3>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                    <span>学生背景与优势分析</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                    <span>个性化学习方案</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                    <span>四阶段详细规划</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                    <span>时间表与关键节点</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                    <span>风险评估与建议</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
