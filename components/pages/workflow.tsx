@@ -238,22 +238,22 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     try {
       switch (step.id) {
         case "transcribe":
-          await executeTranscribe(index)
+          await executeTranscribe(index, stepsToUse)
           break
         case "extract":
-          await executeExtract(index)
+          await executeExtract(index, stepsToUse)
           break
         case "parse":
-          await executeParse(index)
+          await executeParse(index, stepsToUse)
           break
         case "recommend":
-          await executeRecommend(index)
+          await executeRecommend(index, stepsToUse)
           break
         case "report":
-          await executeReport(index)
+          await executeReport(index, stepsToUse)
           break
         case "ppt":
-          await executePPT(index)
+          await executePPT(index, stepsToUse)
           break
       }
     } catch (error) {
@@ -280,7 +280,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   /**
    * 步骤 1: 音频转录
    */
-  const executeTranscribe = async (index: number) => {
+  const executeTranscribe = async (index: number, currentSteps?: StepState[]) => {
     addLog(index, "开始转录音频...")
     
     try {
@@ -309,7 +309,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   /**
    * 步骤 2: 提取学生画像
    */
-  const executeExtract = async (index: number) => {
+  const executeExtract = async (index: number, currentSteps?: StepState[]) => {
     const subtitleName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, ".srt")
     addLog(index, `分析字幕文件: ${subtitleName}`)
     
@@ -341,12 +341,19 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   /**
    * 步骤 3: 解析学生画像（需要用户确认）
    */
-  const executeParse = async (index: number) => {
+  const executeParse = async (index: number, currentSteps?: StepState[]) => {
     addLog(index, "解析学生画像 JSON...")
     
     try {
+      // 使用传入的 steps 或当前的 state
+      const stepsToUse = currentSteps || steps
+      
       // 获取上一步的结果（JSON 字符串）
-      let jsonString = steps[index - 1].result
+      if (!stepsToUse[index - 1]) {
+        throw new Error("上一步骤不存在")
+      }
+      
+      let jsonString = stepsToUse[index - 1].result
       
       if (!jsonString) {
         throw new Error("未找到画像数据")
@@ -394,7 +401,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   /**
    * 步骤 4: 生成推荐方案
    */
-  const executeRecommend = async (index: number) => {
+  const executeRecommend = async (index: number, currentSteps?: StepState[]) => {
     const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
     addLog(index, `生成推荐方案: ${profileName}`)
     
@@ -428,7 +435,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   /**
    * 步骤 5: 生成推荐报告
    */
-  const executeReport = async (index: number) => {
+  const executeReport = async (index: number, currentSteps?: StepState[]) => {
     const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
     addLog(index, `生成推荐报告: ${profileName}`)
     
@@ -460,7 +467,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   /**
    * 步骤 6: 生成 PPT 文稿
    */
-  const executePPT = async (index: number) => {
+  const executePPT = async (index: number, currentSteps?: StepState[]) => {
     const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
     addLog(index, `生成 PPT 文稿: ${profileName}`)
     
