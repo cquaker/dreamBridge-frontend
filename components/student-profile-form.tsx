@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -10,66 +10,198 @@ import type { StudentProfile } from "@/lib/types/dreambridge-api-types"
 /**
  * 学生画像表单组件
  * 
- * 用于用户确认和编辑从音频提取的学生画像信息
+ * 根据 JSON 结构动态生成表单字段，并预填充值
  */
 interface StudentProfileFormProps {
   profile: StudentProfile
   onContinue: (updatedProfile: StudentProfile) => void
 }
 
+/**
+ * 递归渲染表单字段
+ */
+function renderFormFields(
+  data: any,
+  path: string = "",
+  onChange: (path: string, value: any) => void
+): JSX.Element[] {
+  const fields: JSX.Element[] = []
+
+  if (!data || typeof data !== "object") {
+    return fields
+  }
+
+  // 如果是数组，转换为对象处理
+  if (Array.isArray(data)) {
+    return fields
+  }
+
+  Object.entries(data).forEach(([key, value]) => {
+    // 跳过不需要生成表单项的字段
+    if (key === "profile_name" || key === "profile_json" || key === "profile_url") {
+      return
+    }
+
+    const currentPath = path ? `${path}.${key}` : key
+    const fieldId = `field-${currentPath.replace(/\./g, "-")}`
+
+    if (value === null || value === undefined) {
+      // null 或 undefined 值，渲染为可编辑字段
+      fields.push(
+        <div key={fieldId} className="space-y-2">
+          <label className="text-sm font-medium text-foreground block">
+            {key}
+          </label>
+          <Textarea
+            value=""
+            onChange={(e) => onChange(currentPath, e.target.value || null)}
+            placeholder={`请输入${key}`}
+            rows={2}
+            className="resize-none"
+          />
+        </div>
+      )
+    } else if (typeof value === "string") {
+      // 字符串值，根据长度选择 Input 或 Textarea
+      const isLongText = value.length > 100 || value.includes("\n") || value.includes("。") || value.includes("，")
+      
+      if (isLongText) {
+        fields.push(
+          <div key={fieldId} className="space-y-2">
+            <label className="text-sm font-medium text-foreground block">
+              {key}
+            </label>
+            <Textarea
+              value={value}
+              onChange={(e) => onChange(currentPath, e.target.value)}
+              placeholder={`请输入${key}`}
+              rows={4}
+              className="resize-none"
+            />
+          </div>
+        )
+      } else {
+        fields.push(
+          <div key={fieldId} className="space-y-2">
+            <label className="text-sm font-medium text-foreground block">
+              {key}
+            </label>
+            <Input
+              value={value}
+              onChange={(e) => onChange(currentPath, e.target.value)}
+              placeholder={`请输入${key}`}
+            />
+          </div>
+        )
+      }
+    } else if (typeof value === "number") {
+      // 数字值
+      fields.push(
+        <div key={fieldId} className="space-y-2">
+          <label className="text-sm font-medium text-foreground block">
+            {key}
+          </label>
+          <Input
+            type="number"
+            value={value}
+            onChange={(e) => onChange(currentPath, Number.parseFloat(e.target.value) || 0)}
+            placeholder={`请输入${key}`}
+          />
+        </div>
+      )
+    } else if (typeof value === "boolean") {
+      // 布尔值
+      fields.push(
+        <div key={fieldId} className="space-y-2">
+          <label className="text-sm font-medium text-foreground block">
+            {key}
+          </label>
+          <select
+            value={value ? "true" : "false"}
+            onChange={(e) => onChange(currentPath, e.target.value === "true")}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="true">是</option>
+            <option value="false">否</option>
+          </select>
+        </div>
+      )
+    } else if (typeof value === "object" && !Array.isArray(value)) {
+      // 嵌套对象，递归渲染
+      const nestedFields = renderFormFields(value, currentPath, onChange)
+      if (nestedFields.length > 0) {
+        fields.push(
+          <div key={fieldId} className="space-y-4 pt-4 border-t border-border">
+            <h3 className="font-bold text-foreground text-lg border-b pb-2">
+              {key}
+            </h3>
+            <div className="space-y-4">{nestedFields}</div>
+          </div>
+        )
+      }
+    } else if (Array.isArray(value)) {
+      // 数组值，转换为逗号分隔的字符串
+      fields.push(
+        <div key={fieldId} className="space-y-2">
+          <label className="text-sm font-medium text-foreground block">
+            {key}
+          </label>
+          <Input
+            value={value.join(", ")}
+            onChange={(e) => {
+              const arrayValue = e.target.value
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean)
+              onChange(currentPath, arrayValue)
+            }}
+            placeholder={`请输入${key}（用逗号分隔）`}
+          />
+        </div>
+      )
+    }
+  })
+
+  return fields
+}
+
+/**
+ * 根据路径更新嵌套对象的值
+ */
+function updateNestedValue(obj: any, path: string, value: any): any {
+  const keys = path.split(".")
+  const newObj = { ...obj }
+  let current: any = newObj
+
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i]
+    if (!(key in current) || typeof current[key] !== "object" || current[key] === null) {
+      current[key] = {}
+    } else {
+      current[key] = { ...current[key] }
+    }
+    current = current[key]
+  }
+
+  const lastKey = keys[keys.length - 1]
+  current[lastKey] = value
+
+  return newObj
+}
+
 export function StudentProfileForm({ profile: initialProfile, onContinue }: StudentProfileFormProps) {
   const [profile, setProfile] = useState(initialProfile)
   const [loading, setLoading] = useState(false)
 
-  // 更新嵌套字段
-  const updateBasicInfo = (field: keyof StudentProfile["basic_info"], value: any) => {
-    setProfile({
-      ...profile,
-      basic_info: {
-        ...profile.basic_info,
-        [field]: value,
-      },
-    })
-  }
+  // 处理字段值变化
+  const handleFieldChange = useCallback((path: string, value: any) => {
+    setProfile((prev) => updateNestedValue(prev, path, value))
+  }, [])
 
-  const updateAcademic = (field: string, value: any) => {
-    setProfile({
-      ...profile,
-      academic: {
-        ...profile.academic,
-        [field]: value,
-      },
-    })
-  }
-
-  const updateGoals = (field: string, value: any) => {
-    setProfile({
-      ...profile,
-      goals: {
-        ...profile.goals,
-        [field]: value,
-      },
-    })
-  }
-
-  const updateFamily = (field: string, value: any) => {
-    setProfile({
-      ...profile,
-      family: {
-        ...profile.family,
-        [field]: value,
-      },
-    })
-  }
-
-  const updateInterests = (value: string) => {
-    // 将逗号分隔的字符串转换为数组
-    const interests = value.split(",").map((item) => item.trim()).filter(Boolean)
-    setProfile({
-      ...profile,
-      interests,
-    })
-  }
+  // 生成表单字段
+  const formFields = useMemo(() => {
+    return renderFormFields(profile, "", handleFieldChange)
+  }, [profile, handleFieldChange])
 
   // 模拟异步延迟，提交表单后回调父组件
   const handleContinue = async () => {
@@ -91,296 +223,8 @@ export function StudentProfileForm({ profile: initialProfile, onContinue }: Stud
         </p>
       </div>
 
-      {/* 基本信息 */}
-      <div className="space-y-4">
-        <h3 className="font-bold text-foreground text-lg border-b pb-2">👤 基本信息</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">学生姓名 *</label>
-            <Input
-              value={profile.basic_info?.name || ""}
-              onChange={(e) => updateBasicInfo("name", e.target.value)}
-              placeholder="请输入姓名"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">性别</label>
-            <Input
-              value={profile.basic_info?.gender || ""}
-              onChange={(e) => updateBasicInfo("gender", e.target.value)}
-              placeholder="男/女"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">年龄</label>
-            <Input
-              type="number"
-              value={profile.basic_info?.age || ""}
-              onChange={(e) => updateBasicInfo("age", Number.parseInt(e.target.value) || undefined)}
-              placeholder="请输入年龄"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">年级</label>
-            <Input
-              value={profile.basic_info?.grade || ""}
-              onChange={(e) => updateBasicInfo("grade", e.target.value)}
-              placeholder="例如: 高二"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">当前学校</label>
-            <Input
-              value={profile.basic_info?.school || ""}
-              onChange={(e) => updateBasicInfo("school", e.target.value)}
-              placeholder="请输入学校名称"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">联系方式</label>
-            <Input
-              value={profile.basic_info?.contact || ""}
-              onChange={(e) => updateBasicInfo("contact", e.target.value)}
-              placeholder="电话或邮箱"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* 学术成绩 */}
-      <div className="space-y-4 pt-4 border-t border-border">
-        <h3 className="font-bold text-foreground text-lg border-b pb-2">📚 学术成绩</h3>
-        
-        {/* GPA */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">GPA</label>
-            <Input
-              type="number"
-              step="0.01"
-              min="0"
-              max="4"
-              value={profile.academic?.gpa || ""}
-              onChange={(e) => updateAcademic("gpa", Number.parseFloat(e.target.value) || undefined)}
-              placeholder="例如: 3.8"
-            />
-          </div>
-        </div>
-
-        {/* 标准化考试成绩 */}
-        <div>
-          <h4 className="text-sm font-semibold text-foreground mb-3">标准化考试成绩</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="text-sm font-medium text-muted-foreground block mb-2">托福 (TOEFL)</label>
-              <Input
-                type="number"
-                min="0"
-                max="120"
-                value={profile.academic?.test_scores?.toefl || ""}
-                onChange={(e) =>
-                  updateAcademic("test_scores", {
-                    ...profile.academic?.test_scores,
-                    toefl: Number.parseInt(e.target.value) || undefined,
-                  })
-                }
-                placeholder="0-120"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground block mb-2">雅思 (IELTS)</label>
-              <Input
-                type="number"
-                step="0.5"
-                min="0"
-                max="9"
-                value={profile.academic?.test_scores?.ielts || ""}
-                onChange={(e) =>
-                  updateAcademic("test_scores", {
-                    ...profile.academic?.test_scores,
-                    ielts: Number.parseFloat(e.target.value) || undefined,
-                  })
-                }
-                placeholder="0-9"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground block mb-2">SAT</label>
-              <Input
-                type="number"
-                min="400"
-                max="1600"
-                value={profile.academic?.test_scores?.sat || ""}
-                onChange={(e) =>
-                  updateAcademic("test_scores", {
-                    ...profile.academic?.test_scores,
-                    sat: Number.parseInt(e.target.value) || undefined,
-                  })
-                }
-                placeholder="400-1600"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground block mb-2">ACT</label>
-              <Input
-                type="number"
-                min="1"
-                max="36"
-                value={profile.academic?.test_scores?.act || ""}
-                onChange={(e) =>
-                  updateAcademic("test_scores", {
-                    ...profile.academic?.test_scores,
-                    act: Number.parseInt(e.target.value) || undefined,
-                  })
-                }
-                placeholder="1-36"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 主修科目 */}
-        <div>
-          <label className="text-sm font-medium text-foreground block mb-2">主修科目</label>
-          <Input
-            value={profile.academic?.subjects?.join(", ") || ""}
-            onChange={(e) =>
-              updateAcademic(
-                "subjects",
-                e.target.value.split(",").map((s) => s.trim()).filter(Boolean)
-              )
-            }
-            placeholder="例如: 数学, 物理, 化学（用逗号分隔）"
-          />
-        </div>
-
-        {/* 学术成就 */}
-        <div>
-          <label className="text-sm font-medium text-foreground block mb-2">学术成就</label>
-          <Textarea
-            value={profile.academic?.achievements?.join("\n") || ""}
-            onChange={(e) =>
-              updateAcademic(
-                "achievements",
-                e.target.value.split("\n").filter(Boolean)
-              )
-            }
-            placeholder="例如：&#10;- 全国数学竞赛一等奖&#10;- 科研论文发表&#10;（每行一项）"
-            rows={3}
-            className="resize-none"
-          />
-        </div>
-
-        {/* 课外活动 */}
-        <div>
-          <label className="text-sm font-medium text-foreground block mb-2">课外活动</label>
-          <Textarea
-            value={profile.academic?.activities?.join("\n") || ""}
-            onChange={(e) =>
-              updateAcademic(
-                "activities",
-                e.target.value.split("\n").filter(Boolean)
-              )
-            }
-            placeholder="例如：&#10;- 学生会主席&#10;- 志愿者活动&#10;（每行一项）"
-            rows={3}
-            className="resize-none"
-          />
-        </div>
-      </div>
-
-      {/* 兴趣爱好 */}
-      <div className="space-y-4 pt-4 border-t border-border">
-        <h3 className="font-bold text-foreground text-lg border-b pb-2">🎨 兴趣爱好</h3>
-        <div>
-          <label className="text-sm font-medium text-foreground block mb-2">兴趣爱好</label>
-          <Input
-            value={profile.interests?.join(", ") || ""}
-            onChange={(e) => updateInterests(e.target.value)}
-            placeholder="例如: 编程, 阅读, 音乐, 运动（用逗号分隔）"
-          />
-        </div>
-      </div>
-
-      {/* 申请意向 */}
-      <div className="space-y-4 pt-4 border-t border-border">
-        <h3 className="font-bold text-foreground text-lg border-b pb-2">🎯 申请意向</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">目标国家</label>
-            <Input
-              value={profile.goals?.target_countries?.join(", ") || ""}
-              onChange={(e) =>
-                updateGoals(
-                  "target_countries",
-                  e.target.value.split(",").map((s) => s.trim()).filter(Boolean)
-                )
-              }
-              placeholder="例如: 美国, 英国, 加拿大（用逗号分隔）"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">专业方向</label>
-            <Input
-              value={profile.goals?.target_majors?.join(", ") || ""}
-              onChange={(e) =>
-                updateGoals(
-                  "target_majors",
-                  e.target.value.split(",").map((s) => s.trim()).filter(Boolean)
-                )
-              }
-              placeholder="例如: 计算机科学, 人工智能（用逗号分隔）"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">目标学校层级</label>
-            <Input
-              value={profile.goals?.target_school_tier || ""}
-              onChange={(e) => updateGoals("target_school_tier", e.target.value)}
-              placeholder="例如: TOP 20, TOP 50"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">申请时间规划</label>
-            <Input
-              value={profile.goals?.application_timeline || ""}
-              onChange={(e) => updateGoals("application_timeline", e.target.value)}
-              placeholder="例如: 2025年秋季入学"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* 家庭背景 */}
-      <div className="space-y-4 pt-4 border-t border-border">
-        <h3 className="font-bold text-foreground text-lg border-b pb-2">👨‍👩‍👧‍👦 家庭背景</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">父母职业</label>
-            <Input
-              value={profile.family?.parents_occupation || ""}
-              onChange={(e) => updateFamily("parents_occupation", e.target.value)}
-              placeholder="例如: 教师, 工程师"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">家庭年收入</label>
-            <Input
-              value={profile.family?.family_income || ""}
-              onChange={(e) => updateFamily("family_income", e.target.value)}
-              placeholder="例如: 50-100万"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-foreground block mb-2">留学预算</label>
-            <Input
-              value={profile.family?.budget || ""}
-              onChange={(e) => updateFamily("budget", e.target.value)}
-              placeholder="例如: 50万/年"
-            />
-          </div>
-        </div>
-      </div>
+      {/* 动态生成的表单字段 */}
+      <div className="space-y-6">{formFields}</div>
 
       {/* 操作按钮 */}
       <div className="flex gap-3 justify-end pt-6 border-t border-border">

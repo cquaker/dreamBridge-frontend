@@ -254,18 +254,63 @@ export interface StudentFamily {
 }
 
 /**
- * 完整学生画像
+ * 完整学生画像（匹配实际 JSON 结构）
  */
 export interface StudentProfile {
-  /** 基本信息 */
-  basic_info: StudentBasicInfo;
-  /** 学术信息 */
-  academic: StudentAcademic;
-  /** 兴趣爱好 */
-  interests?: string[];
-  /** 留学目标 */
-  goals?: StudentGoals;
+  /** 元信息 */
+  元信息?: {
+    提取时间?: string;
+    访谈日期?: string;
+    顾问姓名?: string | null;
+    学生姓名?: string | null;
+    [key: string]: any;
+  };
+  /** 学生画像 */
+  学生画像?: {
+    基本信息?: string;
+    学术成绩?: string;
+    语言能力?: string;
+    软背景?: string;
+    个人特质?: string;
+    [key: string]: any;
+  };
   /** 家庭背景 */
+  家庭背景?: {
+    经济状况?: string;
+    决策结构?: string;
+    家庭氛围?: string;
+    [key: string]: any;
+  };
+  /** 申请意向 */
+  申请意向?: {
+    目标国家?: string | null;
+    目标排名?: string | null;
+    专业方向?: string | null;
+    时间规划?: string;
+    其他考虑?: string;
+    [key: string]: any;
+  };
+  /** 约束条件 */
+  约束条件?: {
+    明确排除?: string;
+    预算上限?: string | null;
+    时间限制?: string;
+    其他约束?: string;
+    [key: string]: any;
+  };
+  /** 顾问研判 */
+  顾问研判?: {
+    核心矛盾?: string;
+    主要风险?: string;
+    关键机会?: string;
+    策略建议?: string;
+    [key: string]: any;
+  };
+  /** 兼容旧格式 */
+  basic_info?: StudentBasicInfo;
+  academic?: StudentAcademic;
+  interests?: string[];
+  goals?: StudentGoals;
   family?: StudentFamily;
   /** 其他信息 */
   [key: string]: any;

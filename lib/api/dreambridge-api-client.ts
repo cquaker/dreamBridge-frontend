@@ -306,6 +306,16 @@ export class DreamBridgeClient {
   }
 
   /**
+   * 获取学生画像 JSON
+   * 
+   * @param profileName 画像文件名，例如 "test-student_profile.json"
+   * @returns 学生画像数据
+   */
+  async getProfile(profileName: string): Promise<ApiResponse<StudentProfile>> {
+    return this.get<StudentProfile>(`/api/profiles/${profileName}`);
+  }
+
+  /**
    * 重命名字幕说话人
    */
   async renameSubtitleSpeakers(
