@@ -125,9 +125,61 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   }
 
   /**
+   * 从 localStorage 加载保存的步骤状态
+   */
+  const loadStepsFromStorage = (): StepState[] | null => {
+    try {
+      const storageKey = `workflow_steps_${audioName}`
+      const saved = localStorage.getItem(storageKey)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        // 验证数据格式
+        if (Array.isArray(parsed) && parsed.length === stepDefinitions.length) {
+          return parsed as StepState[]
+        }
+      }
+    } catch (error) {
+      console.error("加载保存的步骤状态失败:", error)
+    }
+    return null
+  }
+
+  /**
+   * 保存步骤状态到 localStorage
+   */
+  const saveStepsToStorage = (stepsToSave: StepState[]) => {
+    try {
+      const storageKey = `workflow_steps_${audioName}`
+      localStorage.setItem(storageKey, JSON.stringify(stepsToSave))
+    } catch (error) {
+      console.error("保存步骤状态失败:", error)
+    }
+  }
+
+  /**
    * 初始化步骤状态，根据已完成的标志跳过已完成的步骤
    */
   const initializeSteps = (audioItem: AudioItem) => {
+    // 尝试从 localStorage 加载之前保存的步骤状态
+    const savedSteps = loadStepsFromStorage()
+    
+    if (savedSteps) {
+      // 如果找到保存的状态，使用它（保留日志）
+      console.log("从 localStorage 恢复步骤状态和日志")
+      setSteps(savedSteps)
+      
+      // 找到第一个未完成的步骤并开始执行
+      const firstPendingIndex = savedSteps.findIndex((s) => s.status === "waiting")
+      if (firstPendingIndex !== -1) {
+        setTimeout(() => {
+          setCurrentStepIndex(firstPendingIndex)
+          startStep(firstPendingIndex, savedSteps)
+        }, 800)
+      }
+      return
+    }
+
+    // 如果没有保存的状态，创建新的步骤状态
     const initialSteps: StepState[] = stepDefinitions.map((def) => {
       // 根据 audio 的标志判断步骤是否已完成
       let status: StepState["status"] = "waiting"
@@ -184,6 +236,8 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     setSteps((prevSteps) => {
       const newSteps = [...prevSteps]
       newSteps[index] = { ...newSteps[index], ...updates }
+      // 保存到 localStorage
+      saveStepsToStorage(newSteps)
       return newSteps
     })
   }
@@ -195,6 +249,8 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     setSteps((prevSteps) => {
       const newSteps = [...prevSteps]
       newSteps[index].logs.push(log)
+      // 保存到 localStorage
+      saveStepsToStorage(newSteps)
       return newSteps
     })
   }
@@ -206,6 +262,8 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     setSteps((prevSteps) => {
       const newSteps = [...prevSteps]
       newSteps[index].result += content
+      // 保存到 localStorage
+      saveStepsToStorage(newSteps)
       return newSteps
     })
   }
