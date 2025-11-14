@@ -345,6 +345,43 @@ export class DreamBridgeClient {
   }
 
   /**
+   * 流式生成推荐方案
+   */
+  streamRecommendation(
+    profileName: string,
+    onEvent: (event: any) => void
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const eventSource = this.createEventSource(
+        `/api/profiles/${profileName}/recommendation/stream`
+      );
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          onEvent(data);
+
+          if (data.event === 'completed') {
+            eventSource.close();
+            resolve();
+          } else if (data.event === 'error') {
+            eventSource.close();
+            reject(new Error(data.message));
+          }
+        } catch (error) {
+          eventSource.close();
+          reject(error);
+        }
+      };
+
+      eventSource.onerror = () => {
+        eventSource.close();
+        reject(new Error('EventSource 连接失败'));
+      };
+    });
+  }
+
+  /**
    * 生成 Markdown 报告
    */
   async generateReport(

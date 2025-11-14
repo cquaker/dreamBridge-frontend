@@ -30,7 +30,7 @@ interface StepState {
  * 
  * 功能：
  * 1. 从 API 加载音频信息
- * 2. 顺序执行 5 个工作流步骤
+ * 2. 顺序执行 6 个工作流步骤
  * 3. 支持流式显示日志和结果
  * 4. 在步骤 3 暂停，等待用户确认学生画像
  * 5. 显示所有生成的文件下载链接
@@ -58,13 +58,14 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   // 防重复执行：跟踪正在执行的步骤
   const executingStepsRef = useRef<Set<number>>(new Set())
 
-  // 定义工作流的 5 个步骤
+  // 定义工作流的 6 个步骤
   const stepDefinitions = [
     { id: "transcribe", name: "转录音频", description: "提取音频字幕和转录文本" },
     { id: "extract", name: "提取学生画像", description: "分析关键信息点" },
     { id: "parse", name: "解析学生画像", description: "转换为结构化数据" },
-    { id: "recommend", name: "生成推荐方案", description: "生成个性化学习方案和推荐报告" },
-    { id: "ppt", name: "生成 PPT 文稿", description: "演示文稿内容" },
+    { id: "recommend", name: "撰写学习方案", description: "生成个性化学习方案 JSON" },
+    { id: "report", name: "撰写学习报告", description: "生成详细的学习报告" },
+    { id: "ppt", name: "撰写 PPT 文稿", description: "生成演示文稿内容" },
   ]
 
   /**
@@ -258,6 +259,9 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         case "recommend":
           await executeRecommend(index, stepsToUse)
           break
+        case "report":
+          await executeReport(index, stepsToUse)
+          break
         case "ppt":
           await executePPT(index, stepsToUse)
           break
@@ -385,31 +389,51 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   }
 
   /**
-   * 步骤 4: 生成推荐方案（合并了原步骤 4 和步骤 5）
-   * - 先执行生成推荐方案（不输出结果）
-   * - 然后执行生成推荐报告（输出结果）
+   * 步骤 4: 撰写学习方案（输出 JSON）
    */
   const executeRecommend = async (index: number, currentSteps?: StepState[]) => {
     const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
-    addLog(index, `生成推荐方案: ${profileName}`)
+    addLog(index, `撰写学习方案: ${profileName}`)
     
     try {
-      // 第一步：生成推荐方案（不输出结果）
-      addLog(index, "正在生成推荐方案 JSON...")
+      addLog(index, "正在生成学习方案 JSON...")
+      
+      // 使用同步 API 生成推荐方案
       const response = await apiClient.generateRecommendation(profileName)
       
       if (!response.success || !response.data) {
-        throw new Error(response.error?.message || "生成推荐方案失败")
+        throw new Error(response.error?.message || "生成学习方案失败")
       }
 
-      addLog(index, "✅ 推荐方案生成完成")
-      addLog(index, "开始生成推荐报告...")
+      // 格式化并显示 JSON 结果
+      const jsonString = JSON.stringify(response.data.recommendation_json, null, 2)
+      updateStep(index, {
+        status: "completed",
+        result: jsonString,
+        showResult: true,
+      })
       
-      // 第二步：生成推荐报告（输出结果）
+      addLog(index, "✅ 学习方案撰写完成")
+      
+      // 自动进入下一步
+      setTimeout(() => proceedToNextStep(index), 1000)
+    } catch (error) {
+      throw new Error(`撰写学习方案失败: ${error instanceof Error ? error.message : "未知错误"}`)
+    }
+  }
+
+  /**
+   * 步骤 5: 撰写学习报告（流式输出）
+   */
+  const executeReport = async (index: number, currentSteps?: StepState[]) => {
+    const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
+    addLog(index, `撰写学习报告: ${profileName}`)
+    
+    try {
       await apiClient.streamReport(profileName, (event) => {
         switch (event.event) {
           case "started":
-            addLog(index, event.message || "开始生成推荐报告...")
+            addLog(index, event.message || "开始撰写学习报告...")
             break
           case "log":
             addLog(index, event.message)
@@ -418,7 +442,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
             appendResult(index, event.content)
             break
           case "completed":
-            addLog(index, "✅ 推荐报告生成完成")
+            addLog(index, "✅ 学习报告撰写完成")
             updateStep(index, { status: "completed", showResult: true })
             // 自动进入下一步
             setTimeout(() => proceedToNextStep(index), 1000)
@@ -426,22 +450,22 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         }
       })
     } catch (error) {
-      throw new Error(`生成推荐方案失败: ${error instanceof Error ? error.message : "未知错误"}`)
+      throw new Error(`撰写学习报告失败: ${error instanceof Error ? error.message : "未知错误"}`)
     }
   }
 
   /**
-   * 步骤 5: 生成 PPT 文稿
+   * 步骤 6: 撰写 PPT 文稿
    */
   const executePPT = async (index: number, currentSteps?: StepState[]) => {
     const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
-    addLog(index, `生成 PPT 文稿: ${profileName}`)
+    addLog(index, `撰写 PPT 文稿: ${profileName}`)
     
     try {
       await apiClient.streamPPT(profileName, (event) => {
         switch (event.event) {
           case "started":
-            addLog(index, event.message || "开始生成 PPT...")
+            addLog(index, event.message || "开始撰写 PPT...")
             break
           case "log":
             addLog(index, event.message)
@@ -450,7 +474,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
             appendResult(index, event.content)
             break
           case "completed":
-            addLog(index, "✅ PPT 文稿生成完成")
+            addLog(index, "✅ PPT 文稿撰写完成")
             updateStep(index, { status: "completed", showResult: true })
             setIsWorkflowRunning(false)
             
@@ -471,7 +495,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         }
       })
     } catch (error) {
-      throw new Error(`生成 PPT 失败: ${error instanceof Error ? error.message : "未知错误"}`)
+      throw new Error(`撰写 PPT 失败: ${error instanceof Error ? error.message : "未知错误"}`)
     }
   }
 
@@ -537,7 +561,13 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
       }
 
       addLog(parseIndex, "✅ 画像已保存")
-      updateStep(parseIndex, { status: "completed" })
+      
+      // 更新步骤结果，显示保存后的 JSON（使用用户编辑后的数据，而不是从接口重新获取）
+      updateStep(parseIndex, {
+        status: "completed",
+        result: JSON.stringify(updatedProfile, null, 2),
+        showResult: true,
+      })
       setStudentProfile(updatedProfile)
       
       // 继续下一步
