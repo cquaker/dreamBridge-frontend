@@ -7,7 +7,7 @@ import { useTheme } from "@/components/theme-provider"
 import { WorkflowStep } from "@/components/workflow-step"
 import { StudentProfileForm } from "@/components/student-profile-form"
 import { ArrowLeft, Moon, Sun, Music, CheckCircle2, Loader2 } from "lucide-react"
-import { apiClient } from "@/lib/api/client"
+import { apiClient, normalizeApiUrl, apiBaseURL } from "@/lib/api/client"
 import { useToast } from "@/hooks/use-toast"
 import type { AudioItem, StudentProfile } from "@/lib/types/dreambridge-api-types"
 
@@ -57,6 +57,15 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   
   // 防重复执行：跟踪正在执行的步骤
   const executingStepsRef = useRef<Set<number>>(new Set())
+  
+  // 防重复初始化：跟踪是否已经初始化过
+  const isInitializedRef = useRef(false)
+  
+  // 防重复初始化：跟踪是否正在初始化
+  const isInitializingRef = useRef(false)
+  
+  // 防重复初始化：跟踪步骤是否已经初始化过
+  const stepsInitializedRef = useRef(false)
 
   // 定义工作流的 6 个步骤
   const stepDefinitions = [
@@ -70,9 +79,29 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
 
   /**
    * 初始化：加载音频信息并设置步骤状态
+   * 使用 useRef 防止 React Strict Mode 导致的重复执行
    */
   useEffect(() => {
-    loadAudioInfo()
+    // 如果已经初始化过或正在初始化，则跳过
+    if (isInitializedRef.current || isInitializingRef.current) {
+      return
+    }
+    
+    // 标记为正在初始化
+    isInitializingRef.current = true
+    
+    loadAudioInfo().finally(() => {
+      // 标记为已初始化
+      isInitializedRef.current = true
+      isInitializingRef.current = false
+    })
+    
+    // 清理函数：组件卸载时重置标志
+    return () => {
+      isInitializedRef.current = false
+      isInitializingRef.current = false
+      stepsInitializedRef.current = false
+    }
   }, [])
 
   /**
@@ -104,11 +133,26 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         return
       }
 
-      setAudio(foundAudio)
+      // 规范化音频 URL 和其他资源 URL，确保通过 Next.js 代理访问
+      const normalizedAudio: AudioItem = {
+        ...foundAudio,
+        url: normalizeApiUrl(foundAudio.url, apiBaseURL) || foundAudio.url,
+        transcript_url: normalizeApiUrl(foundAudio.transcript_url, apiBaseURL),
+        subtitle_url: normalizeApiUrl(foundAudio.subtitle_url, apiBaseURL),
+        subtitle_view_url: normalizeApiUrl(foundAudio.subtitle_view_url, apiBaseURL),
+        profile_url: normalizeApiUrl(foundAudio.profile_url, apiBaseURL),
+        profile_json_url: normalizeApiUrl(foundAudio.profile_json_url, apiBaseURL),
+        recommendation_url: normalizeApiUrl(foundAudio.recommendation_url, apiBaseURL),
+        report_url: normalizeApiUrl(foundAudio.report_url, apiBaseURL),
+        report_view_url: normalizeApiUrl(foundAudio.report_view_url, apiBaseURL),
+        ppt_url: normalizeApiUrl(foundAudio.ppt_url, apiBaseURL),
+      }
+
+      setAudio(normalizedAudio)
       
       // 只在初始加载时初始化步骤
       if (!skipInitSteps) {
-        initializeSteps(foundAudio)
+        await initializeSteps(normalizedAudio)
       }
       
     } catch (error) {
@@ -126,60 +170,151 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
 
   /**
    * 从 localStorage 加载保存的步骤状态
+   * 暂时禁用
    */
-  const loadStepsFromStorage = (): StepState[] | null => {
-    try {
-      const storageKey = `workflow_steps_${audioName}`
-      const saved = localStorage.getItem(storageKey)
-      if (saved) {
-        const parsed = JSON.parse(saved)
-        // 验证数据格式
-        if (Array.isArray(parsed) && parsed.length === stepDefinitions.length) {
-          return parsed as StepState[]
-        }
-      }
-    } catch (error) {
-      console.error("加载保存的步骤状态失败:", error)
-    }
-    return null
-  }
+  // const loadStepsFromStorage = (): StepState[] | null => {
+  //   try {
+  //     const storageKey = `workflow_steps_${audioName}`
+  //     const saved = localStorage.getItem(storageKey)
+  //     if (saved) {
+  //       const parsed = JSON.parse(saved)
+  //       // 验证数据格式
+  //       if (Array.isArray(parsed) && parsed.length === stepDefinitions.length) {
+  //         return parsed as StepState[]
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("加载保存的步骤状态失败:", error)
+  //   }
+  //   return null
+  // }
 
   /**
    * 保存步骤状态到 localStorage
+   * 暂时禁用
    */
-  const saveStepsToStorage = (stepsToSave: StepState[]) => {
-    try {
-      const storageKey = `workflow_steps_${audioName}`
-      localStorage.setItem(storageKey, JSON.stringify(stepsToSave))
-    } catch (error) {
-      console.error("保存步骤状态失败:", error)
+  // const saveStepsToStorage = (stepsToSave: StepState[]) => {
+  //   try {
+  //     const storageKey = `workflow_steps_${audioName}`
+  //     localStorage.setItem(storageKey, JSON.stringify(stepsToSave))
+  //   } catch (error) {
+  //     console.error("保存步骤状态失败:", error)
+  //   }
+  // }
+
+  /**
+   * 从 URL 获取文件内容
+   */
+  const fetchFileContent = async (url: string | null | undefined): Promise<string> => {
+    if (!url) {
+      throw new Error("URL 不存在")
     }
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(`获取文件失败: ${response.statusText}`)
+    }
+    return await response.text()
+  }
+
+  /**
+   * 加载已完成步骤的执行结果
+   */
+  const loadStepResults = async (steps: StepState[], audioItem: AudioItem) => {
+    const updatedSteps = [...steps]
+    
+    // 步骤1: 转录音频 - 获取字幕内容
+    const transcribeIndex = updatedSteps.findIndex(s => s.id === "transcribe")
+    if (transcribeIndex !== -1 && updatedSteps[transcribeIndex].status === "completed" && audioItem.subtitle_url) {
+      try {
+        const subtitleContent = await fetchFileContent(audioItem.subtitle_url)
+        updatedSteps[transcribeIndex].result = subtitleContent
+        updatedSteps[transcribeIndex].showResult = true
+      } catch (error) {
+        console.error("获取字幕内容失败:", error)
+      }
+    }
+
+    // 步骤2: 提取学生画像 - 获取画像 JSON
+    const extractIndex = updatedSteps.findIndex(s => s.id === "extract")
+    if (extractIndex !== -1 && updatedSteps[extractIndex].status === "completed" && audioItem.profile_json_url) {
+      try {
+        const profileContent = await fetchFileContent(audioItem.profile_json_url)
+        updatedSteps[extractIndex].result = profileContent
+        updatedSteps[extractIndex].showResult = true
+      } catch (error) {
+        console.error("获取画像内容失败:", error)
+      }
+    }
+
+    // 步骤3: 解析学生画像 - 获取画像 JSON
+    const parseIndex = updatedSteps.findIndex(s => s.id === "parse")
+    if (parseIndex !== -1 && updatedSteps[parseIndex].status === "completed") {
+      try {
+        const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
+        const response = await apiClient.getProfile(profileName)
+        if (response.success && response.data) {
+          updatedSteps[parseIndex].result = JSON.stringify(response.data, null, 2)
+          updatedSteps[parseIndex].showResult = true
+        }
+      } catch (error) {
+        console.error("获取画像 JSON 失败:", error)
+      }
+    }
+
+    // 步骤4: 撰写学习方案 - 获取推荐方案 JSON
+    const recommendIndex = updatedSteps.findIndex(s => s.id === "recommend")
+    if (recommendIndex !== -1 && updatedSteps[recommendIndex].status === "completed" && audioItem.recommendation_url) {
+      try {
+        const recommendationContent = await fetchFileContent(audioItem.recommendation_url)
+        updatedSteps[recommendIndex].result = recommendationContent
+        updatedSteps[recommendIndex].showResult = true
+      } catch (error) {
+        console.error("获取推荐方案内容失败:", error)
+      }
+    }
+
+    // 步骤5: 撰写学习报告 - 获取报告内容
+    const reportIndex = updatedSteps.findIndex(s => s.id === "report")
+    if (reportIndex !== -1 && updatedSteps[reportIndex].status === "completed" && audioItem.report_url) {
+      try {
+        const reportContent = await fetchFileContent(audioItem.report_url)
+        updatedSteps[reportIndex].result = reportContent
+        updatedSteps[reportIndex].showResult = true
+      } catch (error) {
+        console.error("获取报告内容失败:", error)
+      }
+    }
+
+    // 步骤6: 撰写 PPT 文稿 - 获取 PPT 内容
+    const pptIndex = updatedSteps.findIndex(s => s.id === "ppt")
+    if (pptIndex !== -1 && updatedSteps[pptIndex].status === "completed" && audioItem.ppt_url) {
+      try {
+        const pptContent = await fetchFileContent(audioItem.ppt_url)
+        updatedSteps[pptIndex].result = pptContent
+        updatedSteps[pptIndex].showResult = true
+      } catch (error) {
+        console.error("获取 PPT 内容失败:", error)
+      }
+    }
+
+    setSteps(updatedSteps)
   }
 
   /**
    * 初始化步骤状态，根据已完成的标志跳过已完成的步骤
+   * 添加防重复执行检查，确保不会重复初始化
    */
-  const initializeSteps = (audioItem: AudioItem) => {
-    // 尝试从 localStorage 加载之前保存的步骤状态
-    const savedSteps = loadStepsFromStorage()
-    
-    if (savedSteps) {
-      // 如果找到保存的状态，使用它（保留日志）
-      console.log("从 localStorage 恢复步骤状态和日志")
-      setSteps(savedSteps)
-      
-      // 找到第一个未完成的步骤并开始执行
-      const firstPendingIndex = savedSteps.findIndex((s) => s.status === "waiting")
-      if (firstPendingIndex !== -1) {
-        setTimeout(() => {
-          setCurrentStepIndex(firstPendingIndex)
-          startStep(firstPendingIndex, savedSteps)
-        }, 800)
-      }
+  const initializeSteps = async (audioItem: AudioItem) => {
+    // 如果步骤已经初始化过，跳过重复初始化
+    if (stepsInitializedRef.current) {
+      console.log("[initializeSteps] 步骤已初始化，跳过重复初始化")
       return
     }
-
-    // 如果没有保存的状态，创建新的步骤状态
+    
+    // 标记为正在初始化
+    stepsInitializedRef.current = true
+    
+    // 创建新的步骤状态
     const initialSteps: StepState[] = stepDefinitions.map((def) => {
       // 根据 audio 的标志判断步骤是否已完成
       let status: StepState["status"] = "waiting"
@@ -204,12 +339,15 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         status,
         logs: [],
         result: "",
-        isExpanded: false,
+        isExpanded: false, // 默认折叠
         showResult: false,
       }
     })
 
     setSteps(initialSteps)
+
+    // 加载已完成步骤的执行结果
+    await loadStepResults(initialSteps, audioItem)
 
     // 找到第一个未完成的步骤并开始执行
     const firstPendingIndex = initialSteps.findIndex((s) => s.status === "waiting")
@@ -236,8 +374,8 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     setSteps((prevSteps) => {
       const newSteps = [...prevSteps]
       newSteps[index] = { ...newSteps[index], ...updates }
-      // 保存到 localStorage
-      saveStepsToStorage(newSteps)
+      // 暂时取消保存到 localStorage
+      // saveStepsToStorage(newSteps)
       return newSteps
     })
   }
@@ -248,9 +386,13 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   const addLog = (index: number, log: string) => {
     setSteps((prevSteps) => {
       const newSteps = [...prevSteps]
+      // 确保 logs 数组存在
+      if (!newSteps[index].logs) {
+        newSteps[index].logs = []
+      }
       newSteps[index].logs.push(log)
-      // 保存到 localStorage
-      saveStepsToStorage(newSteps)
+      // 暂时取消保存到 localStorage
+      // saveStepsToStorage(newSteps)
       return newSteps
     })
   }
@@ -262,8 +404,8 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     setSteps((prevSteps) => {
       const newSteps = [...prevSteps]
       newSteps[index].result += content
-      // 保存到 localStorage
-      saveStepsToStorage(newSteps)
+      // 暂时取消保存到 localStorage
+      // saveStepsToStorage(newSteps)
       return newSteps
     })
   }
@@ -273,6 +415,10 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
    */
   const startStep = (index: number, currentSteps: StepState[]) => {
     const newSteps = [...currentSteps]
+    // 确保 logs 数组存在（如果不存在则初始化为空数组）
+    if (!newSteps[index].logs) {
+      newSteps[index].logs = []
+    }
     newSteps[index].status = "running"
     newSteps[index].isExpanded = true
     setSteps(newSteps)
@@ -382,6 +528,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     addLog(index, `分析字幕文件: ${subtitleName}`)
     
     try {
+      addLog(index, "正在连接流式提取服务...")
       await apiClient.streamExtraction(subtitleName, (event) => {
         switch (event.event) {
           case "started":
@@ -399,10 +546,15 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
             // 自动进入下一步
             setTimeout(() => proceedToNextStep(index), 1000)
             break
+          case "error":
+            addLog(index, `❌ 错误: ${event.message || "未知错误"}`)
+            throw new Error(event.message || "提取画像失败")
         }
       })
     } catch (error) {
-      throw new Error(`提取画像失败: ${error instanceof Error ? error.message : "未知错误"}`)
+      const errorMessage = error instanceof Error ? error.message : "未知错误"
+      addLog(index, `❌ 提取画像失败: ${errorMessage}`)
+      throw new Error(`提取画像失败: ${errorMessage}`)
     }
   }
 
@@ -447,36 +599,40 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   }
 
   /**
-   * 步骤 4: 撰写学习方案（输出 JSON）
+   * 步骤 4: 撰写学习方案（流式输出 JSON）
    */
   const executeRecommend = async (index: number, currentSteps?: StepState[]) => {
     const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
     addLog(index, `撰写学习方案: ${profileName}`)
     
     try {
-      addLog(index, "正在生成学习方案 JSON...")
-      
-      // 使用同步 API 生成推荐方案
-      const response = await apiClient.generateRecommendation(profileName)
-      
-      if (!response.success || !response.data) {
-        throw new Error(response.error?.message || "生成学习方案失败")
-      }
-
-      // 格式化并显示 JSON 结果
-      const jsonString = JSON.stringify(response.data.recommendation_json, null, 2)
-      updateStep(index, {
-        status: "completed",
-        result: jsonString,
-        showResult: true,
+      addLog(index, "正在连接流式生成服务...")
+      await apiClient.streamRecommendation(profileName, (event) => {
+        switch (event.event) {
+          case "started":
+            addLog(index, event.message || "开始撰写学习方案...")
+            break
+          case "log":
+            addLog(index, event.message)
+            break
+          case "chunk":
+            appendResult(index, event.content)
+            break
+          case "completed":
+            addLog(index, "✅ 学习方案撰写完成")
+            updateStep(index, { status: "completed", showResult: true })
+            // 自动进入下一步
+            setTimeout(() => proceedToNextStep(index), 1000)
+            break
+          case "error":
+            addLog(index, `❌ 错误: ${event.message || "未知错误"}`)
+            throw new Error(event.message || "撰写学习方案失败")
+        }
       })
-      
-      addLog(index, "✅ 学习方案撰写完成")
-      
-      // 自动进入下一步
-      setTimeout(() => proceedToNextStep(index), 1000)
     } catch (error) {
-      throw new Error(`撰写学习方案失败: ${error instanceof Error ? error.message : "未知错误"}`)
+      const errorMessage = error instanceof Error ? error.message : "未知错误"
+      addLog(index, `❌ 撰写学习方案失败: ${errorMessage}`)
+      throw new Error(`撰写学习方案失败: ${errorMessage}`)
     }
   }
 
@@ -600,47 +756,25 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
 
   /**
    * 用户确认学生画像后继续
+   * 暂时只关闭表单，不执行保存操作
    */
   const handleContinueFromPause = async (updatedProfile: StudentProfile) => {
     const parseIndex = steps.findIndex((s) => s.id === "parse")
     
     if (parseIndex === -1) return
 
-    try {
-      // 保存更新后的画像
-      const subtitleName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, ".srt")
-      
-      addLog(parseIndex, "保存学生画像...")
-      
-      const response = await apiClient.saveProfile(subtitleName, updatedProfile)
-      
-      if (!response.success) {
-        throw new Error(response.error?.message || "保存画像失败")
-      }
-
-      addLog(parseIndex, "✅ 画像已保存")
-      
-      // 更新步骤结果，显示保存后的 JSON（使用用户编辑后的数据，而不是从接口重新获取）
-      updateStep(parseIndex, {
-        status: "completed",
-        result: JSON.stringify(updatedProfile, null, 2),
-        showResult: true,
-      })
-      setStudentProfile(updatedProfile)
-      
-      // 继续下一步
-      setTimeout(() => {
-        setIsWorkflowRunning(true)
-        proceedToNextStep(parseIndex)
-      }, 500)
-      
-    } catch (error) {
-      toast({
-        title: "保存失败",
-        description: error instanceof Error ? error.message : "未知错误",
-        variant: "destructive",
-      })
-    }
+    // 添加日志
+    addLog(parseIndex, "用户已确认画像")
+    
+    // 将步骤状态从 "paused" 改为 "completed"，完成步骤3
+    updateStep(parseIndex, {
+      status: "completed",
+    })
+    
+    // 继续下一步
+    setTimeout(() => {
+      proceedToNextStep(parseIndex)
+    }, 500)
   }
 
   /**
