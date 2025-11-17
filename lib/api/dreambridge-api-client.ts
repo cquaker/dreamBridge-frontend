@@ -33,7 +33,7 @@ import type {
   SaveThinkingProcessRequest,
   ThinkingProcessResponse,
   ApiClientConfig,
-} from './dreambridge-api-types';
+} from '../types/dreambridge-api-types';
 
 /**
  * DreamBridge API 客户端
@@ -61,6 +61,10 @@ export class DreamBridgeClient {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${path}`;
+    
+    // 调试：打印请求 URL
+    console.log('[API Client] Request URL:', url);
+    console.log('[API Client] BaseURL:', this.baseURL);
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
@@ -100,6 +104,10 @@ export class DreamBridgeClient {
 
       // 解析 JSON 响应
       const rawData = await response.json();
+      
+      // 调试：打印响应数据
+      console.log('[API Client] Response status:', response.status);
+      console.log('[API Client] Response data:', rawData);
 
       // 检查响应是否已经是 ApiResponse 格式
       if (typeof rawData === 'object' && rawData !== null && 'success' in rawData) {
@@ -117,6 +125,13 @@ export class DreamBridgeClient {
       
     } catch (error) {
       clearTimeout(timeoutId);
+      
+      // 调试：打印错误信息
+      console.error('[API Client] Request failed:', error);
+      console.error('[API Client] Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        url: url,
+      });
       
       // 网络错误或超时
       return {
@@ -165,7 +180,19 @@ export class DreamBridgeClient {
    * 创建 EventSource 连接
    */
   private createEventSource(path: string): EventSource {
-    const url = `${this.baseURL}${path}`;
+    // 如果 baseURL 为空（使用相对路径），在浏览器环境中使用当前页面的 origin
+    let url: string;
+    if (this.baseURL) {
+      url = `${this.baseURL}${path}`;
+    } else {
+      // 在浏览器环境中，使用当前页面的 origin
+      if (typeof window !== 'undefined') {
+        url = `${window.location.origin}${path}`;
+      } else {
+        // 服务器端（不应该发生，因为 EventSource 只在浏览器中可用）
+        url = path;
+      }
+    }
     return new EventSource(url);
   }
 
@@ -312,7 +339,9 @@ export class DreamBridgeClient {
    * @returns 学生画像数据
    */
   async getProfile(profileName: string): Promise<ApiResponse<StudentProfile>> {
-    return this.get<StudentProfile>(`/api/profiles/${profileName}`);
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedProfileName = encodeURIComponent(profileName);
+    return this.get<StudentProfile>(`/api/profiles/${encodedProfileName}`);
   }
 
   /**
@@ -339,8 +368,10 @@ export class DreamBridgeClient {
   async generateRecommendation(
     profileName: string
   ): Promise<ApiResponse<RecommendationResponse>> {
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedProfileName = encodeURIComponent(profileName);
     return this.post<RecommendationResponse>(
-      `/api/profiles/${profileName}/recommendation`
+      `/api/profiles/${encodedProfileName}/recommendation`
     );
   }
 
@@ -351,9 +382,11 @@ export class DreamBridgeClient {
     profileName: string,
     onEvent: (event: any) => void
   ): Promise<void> {
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedProfileName = encodeURIComponent(profileName);
     return new Promise((resolve, reject) => {
       const eventSource = this.createEventSource(
-        `/api/profiles/${profileName}/recommendation/stream`
+        `/api/profiles/${encodedProfileName}/recommendation/stream`
       );
 
       eventSource.onmessage = (event) => {
@@ -374,9 +407,11 @@ export class DreamBridgeClient {
         }
       };
 
-      eventSource.onerror = () => {
+      eventSource.onerror = (error) => {
         eventSource.close();
-        reject(new Error('EventSource 连接失败'));
+        const errorMessage = error instanceof Error ? error.message : 'EventSource 连接失败';
+        console.error('[API Client] EventSource error:', errorMessage);
+        reject(new Error(`EventSource 连接失败: ${errorMessage}`));
       };
     });
   }
@@ -387,7 +422,9 @@ export class DreamBridgeClient {
   async generateReport(
     profileName: string
   ): Promise<ApiResponse<ReportResponse>> {
-    return this.post<ReportResponse>(`/api/profiles/${profileName}/report`);
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedProfileName = encodeURIComponent(profileName);
+    return this.post<ReportResponse>(`/api/profiles/${encodedProfileName}/report`);
   }
 
   /**
@@ -397,9 +434,11 @@ export class DreamBridgeClient {
     profileName: string,
     onEvent: (event: any) => void
   ): Promise<void> {
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedProfileName = encodeURIComponent(profileName);
     return new Promise((resolve, reject) => {
       const eventSource = this.createEventSource(
-        `/api/profiles/${profileName}/report/stream`
+        `/api/profiles/${encodedProfileName}/report/stream`
       );
 
       eventSource.onmessage = (event) => {
@@ -431,7 +470,9 @@ export class DreamBridgeClient {
    * 生成 PPT
    */
   async generatePPT(profileName: string): Promise<ApiResponse<PPTResponse>> {
-    return this.post<PPTResponse>(`/api/profiles/${profileName}/ppt`);
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedProfileName = encodeURIComponent(profileName);
+    return this.post<PPTResponse>(`/api/profiles/${encodedProfileName}/ppt`);
   }
 
   /**
@@ -441,9 +482,11 @@ export class DreamBridgeClient {
     profileName: string,
     onEvent: (event: any) => void
   ): Promise<void> {
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedProfileName = encodeURIComponent(profileName);
     return new Promise((resolve, reject) => {
       const eventSource = this.createEventSource(
-        `/api/profiles/${profileName}/ppt/stream`
+        `/api/profiles/${encodedProfileName}/ppt/stream`
       );
 
       eventSource.onmessage = (event) => {
@@ -642,7 +685,7 @@ export class DreamBridgeClient {
 /**
  * 创建默认客户端实例
  */
-export function createClient(baseURL = 'http://localhost:8000'): DreamBridgeClient {
+export function createClient(baseURL = 'http://8.130.116.143:8809'): DreamBridgeClient {
   return new DreamBridgeClient({ baseURL });
 }
 

@@ -147,7 +147,10 @@ export function ProjectCard({ audio, onClick, onDelete }: ProjectCardProps) {
         <Button
           variant="default"
           size="sm"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation()
+            onClick()
+          }}
           className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-sm"
         >
           查看 <ChevronRight className="w-4 h-4 ml-1" />

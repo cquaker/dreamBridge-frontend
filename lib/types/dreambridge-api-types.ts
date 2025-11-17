@@ -99,18 +99,34 @@ export enum ErrorCode {
 export interface AudioItem {
   /** 文件名 */
   name: string;
+  /** 文件大小（字节） */
+  size?: number;
   /** 访问 URL */
   url: string;
   /** 上传时间 */
   uploaded_at: string;
+  /** MIME 类型 */
+  mime?: string;
   /** 是否有转录文本 */
   has_transcript: boolean;
   /** 转录文本 URL */
   transcript_url: string | null;
+  /** 是否有字幕 */
+  has_subtitle?: boolean;
+  /** 字幕 URL */
+  subtitle_url?: string | null;
+  /** 字幕预览 URL */
+  subtitle_view_url?: string | null;
   /** 是否有学生画像 */
   has_profile: boolean;
   /** 学生画像 URL */
   profile_url: string | null;
+  /** 学生画像 JSON URL */
+  profile_json_url?: string | null;
+  /** 是否有推荐方案 */
+  has_recommendation?: boolean;
+  /** 推荐方案 URL */
+  recommendation_url?: string | null;
   /** 是否有推荐报告 */
   has_report: boolean;
   /** 报告 URL */

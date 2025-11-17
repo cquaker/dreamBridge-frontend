@@ -29,12 +29,17 @@ export function Home() {
     }
 
     try {
+      console.log('[Home] Fetching projects...');
       const response = await apiClient.listAudios()
+      
+      console.log('[Home] API response:', response);
 
       if (!response.success || !response.data) {
+        console.error('[Home] API request failed:', response.error);
         throw new Error(response.error?.message || "获取项目列表失败")
       }
 
+      console.log('[Home] Projects loaded:', response.data.items.length);
       setAudios(response.data.items)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "加载失败，请检查网络连接"
