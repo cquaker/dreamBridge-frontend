@@ -37,11 +37,11 @@ export function NewProjectModal({ open, onOpenChange, onCreateProject }: NewProj
       return false
     }
     
-    // 验证文件大小（最大 100MB）
-    if (file.size > 100 * 1024 * 1024) {
+    // 验证文件大小（最大 200MB）
+    if (file.size > 200 * 1024 * 1024) {
       toast({
         title: "文件过大",
-        description: "音频文件不能超过 100MB",
+        description: "音频文件不能超过 200MB",
         variant: "destructive",
       })
       return false
@@ -138,7 +138,7 @@ export function NewProjectModal({ open, onOpenChange, onCreateProject }: NewProj
             >
               <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">点击选择或拖拽音频文件</p>
-              <p className="text-xs text-muted-foreground mt-1">支持格式：MP3, WAV, M4A | 最大 100MB</p>
+              <p className="text-xs text-muted-foreground mt-1">支持格式：MP3, WAV, M4A | 最大 200MB</p>
               <input ref={fileInputRef} type="file" accept="audio/*" onChange={handleFileChange} className="hidden" />
             </div>
 
