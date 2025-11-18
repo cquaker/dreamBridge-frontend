@@ -489,5 +489,13 @@
       "445_advanced-diploma-in-business-studies-lsbf-singapor.md"
     ]
   },
-  "created_at": "2025-11-17T15:39:41.928351"
+  "created_at": "2025-11-17T15:39:41.928351",
+  "metadata": {
+    "studentCount": 45000,
+    "teacherCount": null,
+    "partnerUniversityCount": null,
+    "region": "新加坡",
+    "schoolType": "大学",
+    "schoolTypeDisplay": "新加坡大学"
+  }
 }

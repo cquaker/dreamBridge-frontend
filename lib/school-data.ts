@@ -92,13 +92,18 @@ export function getSchool(schoolId: string): School | null {
   
   const chapters = getSchoolChapters(schoolId)
   
-  // 统计专业数量
+  // 统计专业数量（支持新旧两种格式）
   const programsDir = path.join(SCHOOLS_DATA_DIR, schoolId, 'programs')
+  const shortId = getShortSchoolId(schoolId)
   let programCount = 0
   try {
     if (fs.existsSync(programsDir)) {
       const files = fs.readdirSync(programsDir)
-      programCount = files.filter(f => f.endsWith('.md') && f.includes('项目_')).length
+      // 支持新格式：shortId_p_xxx.md 和旧格式：schoolId_项目_xxx.md
+      programCount = files.filter(f => 
+        f.endsWith('.md') && 
+        (f.startsWith(`${shortId}_p_`) || f.includes('项目_'))
+      ).length
     }
   } catch (error) {
     console.error(`Error counting programs for ${schoolId}:`, error)

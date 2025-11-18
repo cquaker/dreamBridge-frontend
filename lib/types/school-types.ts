@@ -1,3 +1,12 @@
+export interface SchoolMetadata {
+  studentCount: number | null
+  teacherCount: number | null
+  partnerUniversityCount: number | null
+  region: string | null
+  schoolType: string | null
+  schoolTypeDisplay: string | null
+}
+
 export interface SchoolIndex {
   school_name: string
   source_path: string
@@ -6,6 +15,7 @@ export interface SchoolIndex {
     [key: string]: string[]
   }
   created_at: string
+  metadata?: SchoolMetadata
 }
 
 export interface School {

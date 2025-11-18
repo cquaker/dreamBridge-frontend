@@ -392,5 +392,13 @@
       "346_diploma-in-international-hospitality-and-tourism-m.md"
     ]
   },
-  "created_at": "2025-11-17T15:01:00.872872"
+  "created_at": "2025-11-17T15:01:00.872872",
+  "metadata": {
+    "studentCount": 2000,
+    "teacherCount": null,
+    "partnerUniversityCount": 30,
+    "region": "新加坡",
+    "schoolType": "私立",
+    "schoolTypeDisplay": "新加坡私立院校"
+  }
 }
