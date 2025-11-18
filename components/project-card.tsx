@@ -22,7 +22,9 @@ function getProjectStatus(audio: AudioItem): ProjectStatus {
     return "completed"
   }
   // 如果有转录或画像，说明正在处理
-  if (audio.has_transcript || audio.has_profile) {
+  // 转录完成可能有三种情况：has_transcript、has_subtitle 或 subtitle_url 存在
+  const hasTranscription = audio.has_transcript || audio.has_subtitle || !!audio.subtitle_url
+  if (hasTranscription || audio.has_profile) {
     return "processing"
   }
   // 否则是待开始
@@ -109,11 +111,11 @@ export function ProjectCard({ audio, onClick, onDelete }: ProjectCardProps) {
         {/* 处理步骤状态 - 简化版 */}
         <div className="mb-4 flex flex-wrap gap-2 flex-shrink-0">
           <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs ${
-            audio.has_transcript 
+            audio.has_transcript || audio.has_subtitle || audio.subtitle_url
               ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300' 
               : 'bg-muted/50 text-muted-foreground'
           }`}>
-            {audio.has_transcript ? (
+            {audio.has_transcript || audio.has_subtitle || audio.subtitle_url ? (
               <CheckCircle2 className="w-3 h-3" />
             ) : (
               <div className="w-3 h-3 rounded-full border border-muted-foreground/30" />
