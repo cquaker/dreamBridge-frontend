@@ -55,6 +55,9 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   
+  // 滚动节流：避免过于频繁的滚动操作
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  
   // 防重复执行：跟踪正在执行的步骤
   const executingStepsRef = useRef<Set<number>>(new Set())
   
@@ -522,11 +525,57 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     }
   }
 
+  // 滚动到底部的辅助函数（带节流）
+  const scrollToBottom = (smooth: boolean = true, immediate: boolean = false) => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current
+      
+      // 如果要求立即滚动（不节流），直接执行
+      if (immediate) {
+        requestAnimationFrame(() => {
+          if (smooth) {
+            container.scrollTo({
+              top: container.scrollHeight,
+              behavior: 'smooth'
+            })
+          } else {
+            container.scrollTop = container.scrollHeight
+          }
+        })
+        return
+      }
+      
+      // 节流：清除之前的定时器
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+      }
+      
+      // 设置新的滚动定时器（50ms 节流）
+      scrollTimeoutRef.current = setTimeout(() => {
+        requestAnimationFrame(() => {
+          if (scrollContainerRef.current) {
+            const container = scrollContainerRef.current
+            if (smooth) {
+              container.scrollTo({
+                top: container.scrollHeight,
+                behavior: 'smooth'
+              })
+            } else {
+              container.scrollTop = container.scrollHeight
+            }
+          }
+        })
+      }, 50)
+    }
+  }
+
   // 监听 steps 变化，将滚动容器滑动到底部，方便查看最新日志
   useEffect(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
-    }
+    // 延迟滚动，确保 DOM 完全更新
+    const timer = setTimeout(() => {
+      scrollToBottom(true)
+    }, 50)
+    return () => clearTimeout(timer)
   }, [steps])
 
   /**
@@ -557,6 +606,8 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
       // saveStepsToStorage(newSteps)
       return newSteps
     })
+    // 添加日志后滚动到底部（使用节流）
+    scrollToBottom(true, false)
   }
 
   /**
@@ -570,6 +621,8 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
       // saveStepsToStorage(newSteps)
       return newSteps
     })
+    // 追加结果后滚动到底部（使用节流）
+    scrollToBottom(true, false)
   }
 
   /**
@@ -699,6 +752,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
           case "sentence":
             addLog(index, `[${event.begin_time.toFixed(1)}s] ${event.text}`)
             appendResult(index, event.srt_entry + "\n")
+            // appendResult 内部已经会触发滚动，这里不需要再次调用
             break
           case "complete":
             addLog(index, "✅ 转录完成")
