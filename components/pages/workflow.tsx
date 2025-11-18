@@ -319,7 +319,9 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
       // 根据 audio 的标志判断步骤是否已完成
       let status: StepState["status"] = "waiting"
       
-      if (def.id === "transcribe" && audioItem.has_transcript) {
+      // 转录步骤：优先检查 srt 文件是否存在（has_subtitle 或 subtitle_url）
+      // 如果 srt 文件存在，说明转录已完成，跳过转录步骤
+      if (def.id === "transcribe" && (audioItem.has_subtitle || audioItem.subtitle_url || audioItem.has_transcript)) {
         status = "completed"
       } else if (def.id === "extract" && audioItem.has_profile) {
         status = "completed"
@@ -493,8 +495,39 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
 
   /**
    * 步骤 1: 音频转录
+   * 优先检查 srt 文件是否存在，如果存在则直接加载，跳过转录 API 调用
    */
   const executeTranscribe = async (index: number, currentSteps?: StepState[]) => {
+    // 优先检查 srt 文件是否存在
+    if (audio && (audio.has_subtitle || audio.subtitle_url)) {
+      addLog(index, "检测到字幕文件已存在，跳过转录步骤")
+      addLog(index, "正在加载字幕文件...")
+      
+      try {
+        // 如果有 subtitle_url，直接加载字幕文件内容
+        if (audio.subtitle_url) {
+          const subtitleContent = await fetchFileContent(audio.subtitle_url)
+          appendResult(index, subtitleContent)
+          addLog(index, "✅ 字幕文件加载完成")
+        } else {
+          // 如果没有 subtitle_url，尝试从音频文件名推断 srt 文件名
+          const subtitleName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, ".srt")
+          addLog(index, `尝试加载字幕文件: ${subtitleName}`)
+          // 这里可以尝试通过 API 获取字幕文件，或者直接标记为完成
+          addLog(index, "✅ 字幕文件已存在，跳过转录")
+        }
+        
+        updateStep(index, { status: "completed", showResult: true })
+        // 自动进入下一步
+        setTimeout(() => proceedToNextStep(index), 1000)
+        return
+      } catch (error) {
+        // 如果加载字幕文件失败，继续执行转录
+        addLog(index, `⚠️ 加载字幕文件失败，将执行转录: ${error instanceof Error ? error.message : "未知错误"}`)
+      }
+    }
+    
+    // 如果 srt 文件不存在，执行转录
     addLog(index, "开始转录音频...")
     
     try {

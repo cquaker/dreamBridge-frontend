@@ -232,6 +232,7 @@ export function StudentProfileForm({ profile: initialProfile, onContinue }: Stud
           variant="outline" 
           onClick={handleReset}
           disabled={loading}
+          className="hidden"
         >
           重置
         </Button>

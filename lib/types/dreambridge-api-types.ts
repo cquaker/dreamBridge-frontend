@@ -146,6 +146,22 @@ export interface AudioList {
   items: AudioItem[];
 }
 
+/**
+ * 删除音频响应
+ */
+export interface DeleteAudioResponse {
+  /** 音频文件名 */
+  audio_name: string;
+  /** 已删除的文件列表 */
+  deleted_files: string[];
+  /** 删除失败的文件列表 */
+  failed_files: string[];
+  /** 是否保留了 .srt 文件 */
+  srt_kept: boolean;
+  /** .srt 文件路径（如果保留） */
+  srt_path?: string;
+}
+
 // ============================================================================
 // 转录相关类型
 // ============================================================================

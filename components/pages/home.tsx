@@ -3,6 +3,16 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { useTheme } from "@/components/theme-provider"
 import { ProjectCard } from "@/components/project-card"
 import { NewProjectModal } from "@/components/new-project-modal"
@@ -19,6 +29,9 @@ export function Home() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [showNewProjectModal, setShowNewProjectModal] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [audioToDelete, setAudioToDelete] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   // 从后端获取项目列表
   const fetchProjects = async (showLoading = true) => {
@@ -70,12 +83,67 @@ export function Home() {
     router.push(`/project/${encodeURIComponent(audio.name)}`)
   }
 
-  // 删除项目（暂不实现，后端需要提供 DELETE API）
+  // 打开删除确认对话框
   const handleDeleteProject = (audioName: string) => {
-    toast({
-      title: "功能开发中",
-      description: "删除功能即将上线",
-    })
+    setAudioToDelete(audioName)
+    setDeleteDialogOpen(true)
+  }
+
+  // 确认删除项目
+  const confirmDeleteProject = async () => {
+    if (!audioToDelete) return
+
+    setDeleting(true)
+    try {
+      console.log('[Home] Deleting audio:', audioToDelete)
+      const response = await apiClient.deleteAudio(audioToDelete)
+
+      if (!response.success || !response.data) {
+        console.error('[Home] Delete failed:', response.error)
+        throw new Error(response.error?.message || "删除失败")
+      }
+
+      const deleteResult = response.data
+      console.log('[Home] Delete success:', deleteResult)
+
+      // 从列表中移除已删除的项目（立即更新 UI）
+      setAudios(prevAudios => prevAudios.filter(audio => audio.name !== audioToDelete))
+
+      // 显示成功提示
+      const deletedCount = deleteResult.deleted_files.length
+      const failedCount = deleteResult.failed_files.length
+      let description = `已删除 ${deletedCount} 个文件`
+      if (deleteResult.srt_kept && deleteResult.srt_path) {
+        description += `，已保留字幕文件：${deleteResult.srt_path}`
+      }
+      if (failedCount > 0) {
+        description += `，${failedCount} 个文件删除失败`
+      }
+
+      toast({
+        title: "删除成功",
+        description: description,
+      })
+
+      // 关闭对话框
+      setDeleteDialogOpen(false)
+      setAudioToDelete(null)
+
+      // 刷新列表以确保与后端同步（防止后端仍返回已删除的项目）
+      // 使用不显示加载状态的方式刷新，避免影响用户体验
+      await fetchProjects(false)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "删除失败，请检查网络连接"
+      console.error('[Home] Delete error:', error)
+      
+      toast({
+        title: "删除失败",
+        description: errorMessage,
+        variant: "destructive",
+      })
+    } finally {
+      setDeleting(false)
+    }
   }
 
   // 点击项目卡片
@@ -193,6 +261,32 @@ export function Home() {
         onOpenChange={setShowNewProjectModal}
         onCreateProject={handleCreateProject}
       />
+
+      {/* 删除确认对话框 */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>确认删除项目</AlertDialogTitle>
+            <AlertDialogDescription>
+              确定要删除项目 <strong>{audioToDelete}</strong> 吗？
+              <br />
+              此操作将删除音频文件及其相关文件（转录、画像、报告、PPT 等文件）。
+              <br />
+              <span className="text-destructive font-medium">此操作不可撤销。</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>取消</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteProject}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? "删除中..." : "确认删除"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <style jsx>{`
         @keyframes fadeInUp {

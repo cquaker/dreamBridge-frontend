@@ -24,31 +24,36 @@ export function NewProjectModal({ open, onOpenChange, onCreateProject }: NewProj
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
 
+  // 验证音频文件的辅助函数
+  const validateAudioFile = (file: File): boolean => {
+    // 验证文件格式
+    const validFormats = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/m4a', 'audio/mp4']
+    if (!validFormats.includes(file.type) && !file.name.match(/\.(mp3|wav|m4a|mp4)$/i)) {
+      toast({
+        title: "文件格式不支持",
+        description: "请上传 MP3、WAV、M4A 或 MP4 格式的音频文件",
+        variant: "destructive",
+      })
+      return false
+    }
+    
+    // 验证文件大小（最大 100MB）
+    if (file.size > 100 * 1024 * 1024) {
+      toast({
+        title: "文件过大",
+        description: "音频文件不能超过 100MB",
+        variant: "destructive",
+      })
+      return false
+    }
+    
+    return true
+  }
+
   // 监听文件选择与拖拽，限制为单个音频文件
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      // 验证文件格式
-      const validFormats = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/m4a', 'audio/mp4']
-      if (!validFormats.includes(file.type) && !file.name.match(/\.(mp3|wav|m4a|mp4)$/i)) {
-        toast({
-          title: "文件格式不支持",
-          description: "请上传 MP3、WAV、M4A 或 MP4 格式的音频文件",
-          variant: "destructive",
-        })
-        return
-      }
-      
-      // 验证文件大小（最大 50MB）
-      if (file.size > 50 * 1024 * 1024) {
-        toast({
-          title: "文件过大",
-          description: "音频文件不能超过 50MB",
-          variant: "destructive",
-        })
-        return
-      }
-      
+    if (file && validateAudioFile(file)) {
       setAudioFile(file)
     }
   }
@@ -126,14 +131,14 @@ export function NewProjectModal({ open, onOpenChange, onCreateProject }: NewProj
               onDrop={(e) => {
                 e.preventDefault()
                 const file = e.dataTransfer.files[0]
-                if (file && file.type.startsWith("audio/")) {
+                if (file && validateAudioFile(file)) {
                   setAudioFile(file)
                 }
               }}
             >
               <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">点击选择或拖拽音频文件</p>
-              <p className="text-xs text-muted-foreground mt-1">支持格式：MP3, WAV, M4A | 最大 50MB</p>
+              <p className="text-xs text-muted-foreground mt-1">支持格式：MP3, WAV, M4A | 最大 100MB</p>
               <input ref={fileInputRef} type="file" accept="audio/*" onChange={handleFileChange} className="hidden" />
             </div>
 

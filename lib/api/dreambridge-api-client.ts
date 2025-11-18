@@ -23,6 +23,7 @@ import type {
   ApiResponse,
   AudioItem,
   AudioList,
+  DeleteAudioResponse,
   TranscriptionResponse,
   ExtractionResponse,
   RecommendationResponse,
@@ -177,6 +178,13 @@ export class DreamBridgeClient {
   }
 
   /**
+   * DELETE 请求
+   */
+  private async delete<T>(path: string): Promise<ApiResponse<T>> {
+    return this.request<T>(path, { method: 'DELETE' });
+  }
+
+  /**
    * 创建 EventSource 连接
    */
   private createEventSource(path: string): EventSource {
@@ -214,6 +222,18 @@ export class DreamBridgeClient {
    */
   async listAudios(): Promise<ApiResponse<AudioList>> {
     return this.get<AudioList>('/api/audios');
+  }
+
+  /**
+   * 删除音频文件（保留 .srt 文件）
+   * 
+   * @param audioName 音频文件名，例如 "sample.wav"
+   * @returns 删除响应，包含已删除的文件列表和保留的 .srt 文件信息
+   */
+  async deleteAudio(audioName: string): Promise<ApiResponse<DeleteAudioResponse>> {
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedAudioName = encodeURIComponent(audioName);
+    return this.delete<DeleteAudioResponse>(`/api/audios/${encodedAudioName}`);
   }
 
   // ========================================================================
