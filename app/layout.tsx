@@ -26,9 +26,58 @@ const ibmPlexSerifFont = IBM_Plex_Serif({
 })
 
 export const metadata: Metadata = {
-  title: "学习方案工作流 Agent",
-  description: "AI-powered learning plan workflow system",
-  generator: "v0.app",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  title: {
+    default: "留学规划",
+    template: "%s | 留学规划",
+  },
+  description: "智能留学规划平台，提供学校数据查询、学习方案生成和 AI 辅助教育规划服务",
+  keywords: [
+    "留学规划",
+    "教育规划",
+    "学校数据",
+    "学习方案",
+    "AI 教育",
+    "DreamBridge",
+  ],
+  authors: [{ name: "DreamBridge Team" }],
+  creator: "DreamBridge",
+  publisher: "DreamBridge",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    locale: "zh_CN",
+    url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+    title: "留学规划",
+    description: "智能留学规划平台，提供学校数据查询、学习方案生成和 AI 辅助教育规划服务",
+    siteName: "留学规划",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "留学规划",
+    description: "智能留学规划平台，提供学校数据查询、学习方案生成和 AI 辅助教育规划服务",
+    creator: "@dreambridge",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/apple-icon.png",
+  },
 }
 
 export default function RootLayout({

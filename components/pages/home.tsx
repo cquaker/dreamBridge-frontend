@@ -7,7 +7,7 @@ import { useTheme } from "@/components/theme-provider"
 import { ProjectCard } from "@/components/project-card"
 import { NewProjectModal } from "@/components/new-project-modal"
 import { SchoolCard } from "@/components/schools/school-card"
-import { Moon, Sun, Plus, RefreshCw, GraduationCap } from "lucide-react"
+import { Moon, Sun, Plus, RefreshCw, GraduationCap, FolderOpen } from "lucide-react"
 import { apiClient } from "@/lib/api/client"
 import { useToast } from "@/hooks/use-toast"
 import type { AudioItem } from "@/lib/types/dreambridge-api-types"
@@ -122,7 +122,7 @@ export function Home() {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md">
                 AI
               </div>
-              <h1 className="text-lg font-semibold text-foreground tracking-tight">学习方案工作流 Agent</h1>
+              <h1 className="text-lg font-semibold text-foreground tracking-tight">留学规划</h1>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -150,7 +150,10 @@ export function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-10">
           <div>
-            <h2 className="text-3xl font-bold text-foreground tracking-tight">项目管理</h2>
+            <div className="flex items-center gap-2 mb-2">
+              <FolderOpen className="w-6 h-6 text-blue-600" />
+              <h2 className="text-3xl font-bold text-foreground tracking-tight">项目管理</h2>
+            </div>
             <p className="text-sm text-muted-foreground mt-2 font-normal">
               {loading ? "加载中..." : `${audios.length} 个项目`}
             </p>
@@ -193,10 +196,11 @@ export function Home() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {audios.map((audio, index) => (
               <div
                 key={audio.name}
+                className="flex w-full"
                 style={{
                   animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
                 }}

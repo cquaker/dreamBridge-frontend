@@ -93,20 +93,22 @@ export function SchoolCard({ school, onClick }: SchoolCardProps) {
   
   return (
     <Card 
-      className="cursor-pointer hover:shadow-lg transition-shadow duration-200 h-full flex flex-col"
+      className="group cursor-pointer border border-border rounded-xl bg-card shadow-sm hover:shadow-xl hover:border-primary/40 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col"
       onClick={onClick}
     >
       <CardHeader>
-        <CardTitle className="text-xl">{school.name}</CardTitle>
+        <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
+          {school.name}
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col justify-end">
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 group-hover:text-foreground transition-colors duration-300">
             <BookOpen className="w-4 h-4" />
             <span>{school.programCount} 个专业</span>
           </div>
           {studentCountText && (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 group-hover:text-foreground transition-colors duration-300">
               <Users className="w-4 h-4" />
               <span>{studentCountText}</span>
             </div>
@@ -114,7 +116,7 @@ export function SchoolCard({ school, onClick }: SchoolCardProps) {
         </div>
         {schoolTypeText && (
           <div className="mt-3">
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-xs group-hover:bg-primary/10 group-hover:text-primary transition-colors duration-300">
               {schoolTypeText}
             </Badge>
           </div>
