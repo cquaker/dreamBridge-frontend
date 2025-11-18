@@ -34,7 +34,9 @@ function extractStudentCount(content) {
 }
 
 // 提取学校类型和地区
-function extractSchoolTypeAndRegion(content) {
+function extractSchoolTypeAndRegion(chapter1Content, chapter2Content, schoolName) {
+  const allContent = (chapter1Content || '') + '\n' + (chapter2Content || '')
+  
   const regionPatterns = [
     { pattern: /新加坡/, name: '新加坡' },
     { pattern: /中国/, name: '中国' },
@@ -44,37 +46,87 @@ function extractSchoolTypeAndRegion(content) {
     { pattern: /加拿大/, name: '加拿大' },
   ]
   
-  const typePatterns = [
-    { pattern: /私立教育机构|私立院校|私立学院|PEI/, type: '私立' },
-    { pattern: /公立大学|公立院校/, type: '公立' },
-    { pattern: /大学/, type: '大学' },
-    { pattern: /学院/, type: '学院' },
-  ]
-  
   let region = null
   for (const { pattern, name } of regionPatterns) {
-    if (pattern.test(content)) {
+    if (pattern.test(allContent)) {
       region = name
       break
     }
   }
   
+  // 优先从第2章节（办学资质）提取学校类型，更准确
+  const contentToCheck = chapter2Content || chapter1Content || ''
+  
   let schoolType = null
-  for (const { pattern, type } of typePatterns) {
-    if (pattern.test(content)) {
-      schoolType = type
-      break
+  
+  // 优先级1：对于新加坡学校，先检查是否是已知的公立大学（最可靠，避免误判）
+  if (region === '新加坡') {
+    // 首先检查学校名称，如果是明确的私立机构，直接标记为私立
+    if (/新加坡管理学院|SIM|Management Institute/.test(schoolName)) {
+      schoolType = '私立'
+    }
+    // 新加坡公立大学：NUS, NTU, SMU, SUTD, SUSS, SIT
+    // 通过学校名称匹配，这些是确定的公立大学
+    else if (/(^|[^a-zA-Z])(南洋理工大学|NTU|新加坡国立大学|NUS|新加坡管理大学|SMU|新加坡科技设计大学|SUTD|新加坡社科大学|SUSS|新加坡理工大学|SIT)([^a-zA-Z]|$)/.test(allContent)) {
+      schoolType = '公立'
+    }
+    // 检查监管机构：教育部（MOE）且没有CPE/SSG，通常是公立
+    else if (/教育部|Ministry of Education|MOE/.test(contentToCheck) && !/CPE|SSG|私立教育理事会/.test(contentToCheck)) {
+      schoolType = '公立'
+    }
+    // 检查是否有明确的"公立大学"、"公立应用型大学"描述
+    else if (/公立大学|公立应用型大学/.test(allContent)) {
+      schoolType = '公立'
+    }
+    // 检查是否有明确的"私立教育机构"、"PEI"等关键词（排除"待补充"的情况）
+    else if (/私立教育机构|作为.*PEI|PEI.*注册|私立教育和/.test(contentToCheck) && !/待补充/.test(contentToCheck)) {
+      schoolType = '私立'
+    }
+    // 检查EduTrust认证（但排除"待补充"的情况，因为公立大学也可能提到但未获得）
+    else if (/EduTrust.*认证|获得.*EduTrust/.test(contentToCheck) && !/待补充/.test(contentToCheck)) {
+      schoolType = '私立'
+    }
+    // 检查CPE/SSG监管（私立教育理事会）
+    else if (/CPE|SSG|私立教育理事会/.test(contentToCheck)) {
+      schoolType = '私立'
+    }
+  } else {
+    // 非新加坡学校
+    // 优先检查公立大学（更具体的关键词）
+    if (/公立大学|公立应用型大学|公立院校/.test(contentToCheck)) {
+      schoolType = '公立'
+    }
+    // 检查私立教育机构（PEI、EduTrust等关键词）
+    else if (/私立教育机构|PEI|EduTrust|私立教育和/.test(contentToCheck)) {
+      schoolType = '私立'
+    }
+  }
+  
+  // 如果还没确定，从第1章节再次检查
+  if (!schoolType && chapter1Content) {
+    if (/公立大学|公立应用型大学|公立院校/.test(chapter1Content)) {
+      schoolType = '公立'
+    } else if (/私立教育机构|PEI|私立教育和/.test(chapter1Content)) {
+      schoolType = '私立'
     }
   }
   
   // 组合地区和类型
   let schoolTypeText = null
   if (region && schoolType) {
-    schoolTypeText = `${region}${schoolType}${schoolType === '大学' || schoolType === '学院' ? '' : '院校'}`
+    if (schoolType === '公立') {
+      schoolTypeText = `${region}${schoolType}大学`
+    } else {
+      schoolTypeText = `${region}${schoolType}院校`
+    }
   } else if (region) {
     schoolTypeText = `${region}院校`
   } else if (schoolType) {
-    schoolTypeText = schoolType === '大学' || schoolType === '学院' ? schoolType : `${schoolType}院校`
+    if (schoolType === '公立') {
+      schoolTypeText = `${schoolType}大学`
+    } else {
+      schoolTypeText = `${schoolType}院校`
+    }
   }
   
   return {
@@ -140,6 +192,7 @@ function processSchool(schoolId) {
   }
   
   const indexData = JSON.parse(fs.readFileSync(indexPath, 'utf-8'))
+  const schoolName = indexData.school_name || ''
   
   // 读取第1章节文件
   const chapter1Path = path.join(schoolDir, `${shortId}_ch1_学校概况.md`)
@@ -150,9 +203,16 @@ function processSchool(schoolId) {
   
   const chapter1Content = fs.readFileSync(chapter1Path, 'utf-8')
   
+  // 读取第2章节文件（办学资质与认证），用于更准确提取学校类型
+  const chapter2Path = path.join(schoolDir, `${shortId}_ch2_办学资质与认证.md`)
+  let chapter2Content = null
+  if (fs.existsSync(chapter2Path)) {
+    chapter2Content = fs.readFileSync(chapter2Path, 'utf-8')
+  }
+  
   // 提取数据
   const studentCount = extractStudentCount(chapter1Content)
-  const schoolTypeInfo = extractSchoolTypeAndRegion(chapter1Content)
+  const schoolTypeInfo = extractSchoolTypeAndRegion(chapter1Content, chapter2Content, schoolName)
   const teacherCount = extractTeacherCount(chapter1Content)
   const partnerUniversityCount = extractPartnerUniversityCount(chapter1Content)
   

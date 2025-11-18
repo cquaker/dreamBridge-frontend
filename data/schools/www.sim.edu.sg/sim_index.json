@@ -311,7 +311,7 @@
     "teacherCount": 500,
     "partnerUniversityCount": 10,
     "region": "新加坡",
-    "schoolType": "公立",
-    "schoolTypeDisplay": "新加坡公立院校"
+    "schoolType": "私立",
+    "schoolTypeDisplay": "新加坡私立院校"
   }
 }

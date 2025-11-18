@@ -160,19 +160,19 @@ export function ProgramList({ school, programs }: ProgramListProps) {
               return (
                 <Card
                   key={program.id}
-                  className="cursor-pointer hover:shadow-lg transition-shadow duration-200 h-full flex flex-col"
+                  className="group cursor-pointer border border-border rounded-xl bg-card shadow-sm hover:shadow-xl hover:border-primary/40 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col"
                   onClick={() => handleProgramClick(program.id)}
                 >
                   <CardHeader>
-                    <CardTitle className="text-lg line-clamp-2">{program.title}</CardTitle>
+                    <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors duration-300">{program.title}</CardTitle>
                     {program.partnerUniversity && program.partnerUniversity !== "待补充" && (
-                      <CardDescription className="mt-2">
+                      <CardDescription className="mt-2 group-hover:text-foreground/80 transition-colors duration-300">
                         合作大学: {program.partnerUniversity}
                       </CardDescription>
                     )}
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col justify-end">
-                    <Badge variant="secondary" className="w-fit">
+                    <Badge variant="secondary" className="w-fit group-hover:bg-primary/10 group-hover:text-primary transition-colors duration-300">
                       {level}
                     </Badge>
                   </CardContent>
