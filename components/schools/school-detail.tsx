@@ -18,7 +18,7 @@ export function SchoolDetail({ school }: SchoolDetailProps) {
   const [activeTab, setActiveTab] = useState("chapter-1")
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-muted/10 dark:via-muted/20 dark:to-muted/30">
       <nav className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4 h-16">
@@ -79,7 +79,11 @@ export function SchoolDetail({ school }: SchoolDetailProps) {
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-4">
                 {school.chapters.map((chapter) => (
-                  <TabsTrigger key={chapter.id} value={`chapter-${chapter.id}`}>
+                  <TabsTrigger 
+                    key={chapter.id} 
+                    value={`chapter-${chapter.id}`}
+                    className="data-[state=active]:bg-slate-200 data-[state=active]:text-slate-900 dark:data-[state=active]:bg-slate-700 dark:data-[state=active]:text-slate-100"
+                  >
                     {chapter.title}
                   </TabsTrigger>
                 ))}

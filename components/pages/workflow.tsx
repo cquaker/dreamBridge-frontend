@@ -1103,7 +1103,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-muted/10 dark:via-muted/20 dark:to-muted/30">
       {/* 导航栏：展示任务标题与主题切换 */}
       <nav className="border-b border-border/30 bg-card/70 sticky top-0 z-10 backdrop-blur-xl shadow-sm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1191,7 +1191,7 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
         </Card>
 
         {/* 工作流步骤列表 */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {steps.map((step, index) => {
             // 只显示非等待状态的步骤
             if (step.status === "waiting") return null

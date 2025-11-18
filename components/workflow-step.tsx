@@ -39,18 +39,28 @@ export function WorkflowStep({ step, stepNumber, onExpand }: WorkflowStepProps) 
   useEffect(() => {
     if (logsExpanded && logsContainerRef.current && step.logs.length > 0) {
       const container = logsContainerRef.current
+      // 使用双重 requestAnimationFrame 确保 DOM 完全更新
       requestAnimationFrame(() => {
-        container.scrollTop = container.scrollHeight
+        requestAnimationFrame(() => {
+          if (logsContainerRef.current) {
+            logsContainerRef.current.scrollTop = logsContainerRef.current.scrollHeight
+          }
+        })
       })
     }
-  }, [step.logs, logsExpanded])
+  }, [step.logs.length, logsExpanded, step.logs])
 
   // 滚动结果区域到底部
   useEffect(() => {
     if (resultExpanded && resultContainerRef.current && step.result) {
       const container = resultContainerRef.current
+      // 使用双重 requestAnimationFrame 确保 DOM 完全更新
       requestAnimationFrame(() => {
-        container.scrollTop = container.scrollHeight
+        requestAnimationFrame(() => {
+          if (resultContainerRef.current) {
+            resultContainerRef.current.scrollTop = resultContainerRef.current.scrollHeight
+          }
+        })
       })
     }
   }, [step.result, resultExpanded])
