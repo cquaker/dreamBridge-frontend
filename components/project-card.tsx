@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Trash2, ChevronRight, Calendar, CheckCircle2, Clock, PlayCircle } from "lucide-react"
 import type { AudioItem } from "@/lib/types/dreambridge-api-types"
 
@@ -159,17 +160,24 @@ export function ProjectCard({ audio, onClick, onDelete }: ProjectCardProps) {
 
         {/* 操作按钮 */}
         <div className="flex gap-2 pt-4 mt-auto border-t border-border/50 flex-shrink-0">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation()
-              onDelete()
-            }}
-            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDelete()
+                }}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>删除项目</p>
+            </TooltipContent>
+          </Tooltip>
           <Button
             variant="default"
             size="sm"

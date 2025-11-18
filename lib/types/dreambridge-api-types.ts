@@ -162,6 +162,27 @@ export interface DeleteAudioResponse {
   srt_path?: string;
 }
 
+/**
+ * 重置音频相关文件响应
+ * 删除除音频文件和 .srt 文件外的其他同名文件
+ */
+export interface ResetAudioResponse {
+  /** 音频文件名 */
+  audio_name: string;
+  /** 已删除的文件列表 */
+  deleted_files: string[];
+  /** 删除失败的文件列表（可能包含错误信息） */
+  failed_files: string[];
+  /** 是否保留了音频文件 */
+  audio_kept: boolean;
+  /** 音频文件路径（如果保留） */
+  audio_path?: string;
+  /** 是否保留了 .srt 文件 */
+  srt_kept: boolean;
+  /** .srt 文件路径（如果保留） */
+  srt_path?: string | null;
+}
+
 // ============================================================================
 // 转录相关类型
 // ============================================================================

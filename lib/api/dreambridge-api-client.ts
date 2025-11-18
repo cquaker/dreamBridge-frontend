@@ -24,6 +24,7 @@ import type {
   AudioItem,
   AudioList,
   DeleteAudioResponse,
+  ResetAudioResponse,
   TranscriptionResponse,
   ExtractionResponse,
   RecommendationResponse,
@@ -234,6 +235,18 @@ export class DreamBridgeClient {
     // URL 编码文件名，确保中文和特殊字符正确传输
     const encodedAudioName = encodeURIComponent(audioName);
     return this.delete<DeleteAudioResponse>(`/api/audios/${encodedAudioName}`);
+  }
+
+  /**
+   * 重置音频相关文件（删除除音频文件和 .srt 文件外的其他同名文件）
+   * 
+   * @param audioName 音频文件名，例如 "sample.wav"
+   * @returns 重置响应，包含已删除的文件列表、保留的音频和 .srt 文件信息
+   */
+  async resetAudio(audioName: string): Promise<ApiResponse<ResetAudioResponse>> {
+    // URL 编码文件名，确保中文和特殊字符正确传输
+    const encodedAudioName = encodeURIComponent(audioName);
+    return this.post<ResetAudioResponse>(`/api/audios/${encodedAudioName}/reset`);
   }
 
   // ========================================================================

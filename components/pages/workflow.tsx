@@ -169,6 +169,132 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   }
 
   /**
+   * 重新推理规划：删除除音频和 srt 外的文件，然后从"提取学生画像"步骤重新开始
+   */
+  const handleRerunPlanning = async () => {
+    if (!audio) {
+      toast({
+        title: "操作失败",
+        description: "音频信息未加载",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      // 显示加载提示
+      toast({
+        title: "正在重新推理规划",
+        description: "正在删除旧文件并重置工作流...",
+      })
+
+      // 1. 调用 API 重置音频相关文件（删除除音频和 srt 外的文件）
+      console.log("[handleRerunPlanning] 开始重置文件，audioName:", audioName)
+      const resetResponse = await apiClient.resetAudio(audioName)
+
+      if (!resetResponse.success || !resetResponse.data) {
+        throw new Error(resetResponse.error?.message || "重置文件失败")
+      }
+
+      const resetResult = resetResponse.data
+      console.log("[handleRerunPlanning] 重置成功:", resetResult)
+
+      // 显示重置结果
+      const deletedCount = resetResult.deleted_files.length
+      const failedCount = resetResult.failed_files.length
+      let description = `已删除 ${deletedCount} 个文件`
+      
+      // 确认音频文件已保留
+      if (resetResult.audio_kept && resetResult.audio_path) {
+        description += `，已保留音频文件`
+      }
+      
+      // 确认字幕文件是否保留
+      if (resetResult.srt_kept && resetResult.srt_path) {
+        description += `，已保留字幕文件`
+      }
+      
+      if (failedCount > 0) {
+        description += `，${failedCount} 个文件删除失败`
+      }
+
+      toast({
+        title: "文件重置成功",
+        description: description,
+      })
+
+      // 2. 重新加载音频信息
+      setLoading(true)
+      const response = await apiClient.listAudios()
+
+      if (!response.success || !response.data) {
+        throw new Error(response.error?.message || "获取音频列表失败")
+      }
+
+      // 查找当前音频
+      const foundAudio = response.data.items.find((item: AudioItem) => item.name === audioName)
+
+      if (!foundAudio) {
+        toast({
+          title: "音频未找到",
+          description: `找不到音频文件: ${audioName}`,
+          variant: "destructive",
+        })
+        router.push("/")
+        return
+      }
+
+      // 规范化音频 URL
+      const normalizedAudio: AudioItem = {
+        ...foundAudio,
+        url: normalizeApiUrl(foundAudio.url, apiBaseURL) || foundAudio.url,
+        transcript_url: normalizeApiUrl(foundAudio.transcript_url, apiBaseURL),
+        subtitle_url: normalizeApiUrl(foundAudio.subtitle_url, apiBaseURL),
+        subtitle_view_url: normalizeApiUrl(foundAudio.subtitle_view_url, apiBaseURL),
+        profile_url: normalizeApiUrl(foundAudio.profile_url, apiBaseURL),
+        profile_json_url: normalizeApiUrl(foundAudio.profile_json_url, apiBaseURL),
+        recommendation_url: normalizeApiUrl(foundAudio.recommendation_url, apiBaseURL),
+        report_url: normalizeApiUrl(foundAudio.report_url, apiBaseURL),
+        report_view_url: normalizeApiUrl(foundAudio.report_view_url, apiBaseURL),
+        ppt_url: normalizeApiUrl(foundAudio.ppt_url, apiBaseURL),
+      }
+
+      setAudio(normalizedAudio)
+
+      // 3. 重置工作流状态
+      // 清除执行中的步骤标记
+      executingStepsRef.current.clear()
+      setIsWorkflowRunning(false)
+
+      // 4. 重新初始化步骤，从步骤1（提取学生画像）开始
+      // 步骤索引：0=transcribe, 1=extract, 2=parse, 3=recommend, 4=report, 5=ppt
+      const extractStepIndex = stepDefinitions.findIndex((def) => def.id === "extract")
+      if (extractStepIndex === -1) {
+        throw new Error("找不到提取学生画像步骤")
+      }
+
+      // 重新初始化步骤，从步骤1开始
+      await initializeSteps(normalizedAudio, extractStepIndex)
+
+      toast({
+        title: "重新推理规划已启动",
+        description: "工作流已从「提取学生画像」步骤重新开始",
+      })
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "未知错误"
+      console.error("[handleRerunPlanning] 错误:", error)
+
+      toast({
+        title: "重新推理规划失败",
+        description: errorMessage,
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  /**
    * 从 localStorage 加载保存的步骤状态
    * 暂时禁用
    */
@@ -303,8 +429,15 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
   /**
    * 初始化步骤状态，根据已完成的标志跳过已完成的步骤
    * 添加防重复执行检查，确保不会重复初始化
+   * @param audioItem 音频信息
+   * @param startFromStep 从指定步骤索引开始（可选，用于重新推理规划）
    */
-  const initializeSteps = async (audioItem: AudioItem) => {
+  const initializeSteps = async (audioItem: AudioItem, startFromStep?: number) => {
+    // 如果指定了从某个步骤开始，则重置初始化标志
+    if (startFromStep !== undefined) {
+      stepsInitializedRef.current = false
+    }
+    
     // 如果步骤已经初始化过，跳过重复初始化
     if (stepsInitializedRef.current) {
       console.log("[initializeSteps] 步骤已初始化，跳过重复初始化")
@@ -315,7 +448,32 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     stepsInitializedRef.current = true
     
     // 创建新的步骤状态
-    const initialSteps: StepState[] = stepDefinitions.map((def) => {
+    const initialSteps: StepState[] = stepDefinitions.map((def, index) => {
+      // 如果指定了从某个步骤开始，则在该步骤之前的步骤标记为已完成
+      if (startFromStep !== undefined) {
+        if (index < startFromStep) {
+          return {
+            id: def.id,
+            name: def.name,
+            status: "completed" as const,
+            logs: [],
+            result: "",
+            isExpanded: false,
+            showResult: false,
+          }
+        }
+        // 从指定步骤开始，后续步骤都标记为等待
+        return {
+          id: def.id,
+          name: def.name,
+          status: "waiting" as const,
+          logs: [],
+          result: "",
+          isExpanded: false,
+          showResult: false,
+        }
+      }
+      
       // 根据 audio 的标志判断步骤是否已完成
       let status: StepState["status"] = "waiting"
       
@@ -352,7 +510,9 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
     await loadStepResults(initialSteps, audioItem)
 
     // 找到第一个未完成的步骤并开始执行
-    const firstPendingIndex = initialSteps.findIndex((s) => s.status === "waiting")
+    const firstPendingIndex = startFromStep !== undefined 
+      ? startFromStep 
+      : initialSteps.findIndex((s) => s.status === "waiting")
     
     if (firstPendingIndex !== -1) {
       setTimeout(() => {
@@ -1057,21 +1217,15 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
                               })
                             }
                           }}
-                          className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg active:shadow-sm flex items-center justify-center gap-2"
+                          className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg active:shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                         >
                           <span>↓</span>
                           <span>下载 PPT 文稿</span>
                         </button>
                       )}
                       <button
-                        onClick={() => {
-                          // TODO: 实现重新推理规划功能
-                          toast({
-                            title: "功能开发中",
-                            description: "重新推理规划功能即将上线",
-                          })
-                        }}
-                        className="px-6 py-2.5 border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg active:shadow-sm flex items-center justify-center gap-2"
+                        onClick={handleRerunPlanning}
+                        className="px-6 py-2.5 border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg active:shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <RefreshCw className="w-4 h-4" />
                         <span>重新推理规划</span>
