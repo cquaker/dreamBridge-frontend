@@ -4,10 +4,27 @@ import type { School, SchoolIndex, Program } from './types/school-types'
 
 const SCHOOLS_DATA_DIR = path.join(process.cwd(), 'data', 'schools')
 
-// 读取学校索引文件
+// 获取学校ID的短名称（从 www.eaim.edu 提取 eaim）
+function getShortSchoolId(schoolId: string): string {
+  return schoolId
+    .replace(/^www\./, '')
+    .replace(/\.(edu|com|org)(\.sg)?$/, '')
+    .replace(/\./g, '_')
+}
+
+// 读取学校索引文件（支持新旧两种格式）
 export function getSchoolIndex(schoolId: string): SchoolIndex | null {
   try {
-    const indexPath = path.join(SCHOOLS_DATA_DIR, schoolId, `${schoolId}_文件分类索引.json`)
+    const shortId = getShortSchoolId(schoolId)
+    // 先尝试新格式，再尝试旧格式
+    const newIndexPath = path.join(SCHOOLS_DATA_DIR, schoolId, `${shortId}_index.json`)
+    const oldIndexPath = path.join(SCHOOLS_DATA_DIR, schoolId, `${schoolId}_文件分类索引.json`)
+    
+    let indexPath = newIndexPath
+    if (!fs.existsSync(newIndexPath) && fs.existsSync(oldIndexPath)) {
+      indexPath = oldIndexPath
+    }
+    
     const fileContent = fs.readFileSync(indexPath, 'utf-8')
     return JSON.parse(fileContent)
   } catch (error) {
@@ -27,18 +44,23 @@ export function getChapterContent(schoolId: string, chapterFilename: string): st
   }
 }
 
-// 获取所有章节
+// 获取所有章节（支持新旧两种格式）
 export function getSchoolChapters(schoolId: string): { id: number; title: string; filename: string; content: string }[] {
   const chapters: { id: number; title: string; filename: string; content: string }[] = []
+  const shortId = getShortSchoolId(schoolId)
+  const schoolDir = path.join(SCHOOLS_DATA_DIR, schoolId)
   
   // 扫描章节文件（第1章节到第4章节）
   for (let i = 1; i <= 4; i++) {
-    const chapterPattern = `${schoolId}_第${i}章节_`
-    const schoolDir = path.join(SCHOOLS_DATA_DIR, schoolId)
-    
     try {
       const files = fs.readdirSync(schoolDir)
-      const chapterFile = files.find(f => f.startsWith(chapterPattern) && f.endsWith('.md'))
+      // 先尝试新格式：shortId_ch1_xxx.md
+      let chapterFile = files.find(f => f.startsWith(`${shortId}_ch${i}_`) && f.endsWith('.md'))
+      // 如果找不到，尝试旧格式：schoolId_第i章节_xxx.md
+      if (!chapterFile) {
+        const oldPattern = `${schoolId}_第${i}章节_`
+        chapterFile = files.find(f => f.startsWith(oldPattern) && f.endsWith('.md'))
+      }
       
       if (chapterFile) {
         const content = getChapterContent(schoolId, chapterFile)
@@ -118,10 +140,11 @@ export function getAllSchools(): School[] {
   return schools
 }
 
-// 获取专业列表
+// 获取专业列表（支持新旧两种格式）
 export function getPrograms(schoolId: string): Program[] {
   const programs: Program[] = []
   const programsDir = path.join(SCHOOLS_DATA_DIR, schoolId, 'programs')
+  const shortId = getShortSchoolId(schoolId)
   
   try {
     if (!fs.existsSync(programsDir)) {
@@ -129,7 +152,11 @@ export function getPrograms(schoolId: string): Program[] {
     }
     
     const files = fs.readdirSync(programsDir)
-    const programFiles = files.filter(f => f.endsWith('.md') && f.includes('项目_'))
+    // 支持新格式：shortId_p_xxx.md 和旧格式：schoolId_项目_xxx.md
+    const programFiles = files.filter(f => 
+      f.endsWith('.md') && 
+      (f.startsWith(`${shortId}_p_`) || f.includes('项目_'))
+    )
     
     for (const file of programFiles) {
       try {
@@ -144,8 +171,13 @@ export function getPrograms(schoolId: string): Program[] {
         const partnerMatch = content.match(/\*\*合作大学\*\*:\s*(.+)/)
         const partnerUniversity = partnerMatch ? partnerMatch[1].trim() : undefined
         
-        // 生成ID（从文件名）
-        const id = file.replace('.md', '').replace(`${schoolId}_项目_`, '')
+        // 生成ID（从文件名，支持新旧格式）
+        let id = file.replace('.md', '')
+        if (file.startsWith(`${shortId}_p_`)) {
+          id = id.replace(`${shortId}_p_`, '')
+        } else if (file.includes('项目_')) {
+          id = id.replace(`${schoolId}_项目_`, '')
+        }
         
         programs.push({
           id,
