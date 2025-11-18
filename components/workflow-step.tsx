@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { ChevronDown, CheckCircle2, Circle, Pause } from "lucide-react"
 
@@ -21,6 +21,8 @@ interface WorkflowStepProps {
 export function WorkflowStep({ step, stepNumber, onExpand }: WorkflowStepProps) {
   const [logsExpanded, setLogsExpanded] = useState(true)
   const [resultExpanded, setResultExpanded] = useState(true)
+  const logsContainerRef = useRef<HTMLDivElement>(null)
+  const resultContainerRef = useRef<HTMLDivElement>(null)
 
   const statusConfig = {
     waiting: { icon: Circle, label: "等待", color: "text-gray-400", bgColor: "bg-gray-100 dark:bg-gray-900" },
@@ -32,6 +34,26 @@ export function WorkflowStep({ step, stepNumber, onExpand }: WorkflowStepProps) 
 
   const statusInfo = statusConfig[step.status]
   const StatusIcon = statusInfo.icon
+
+  // 滚动日志区域到底部
+  useEffect(() => {
+    if (logsExpanded && logsContainerRef.current && step.logs.length > 0) {
+      const container = logsContainerRef.current
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight
+      })
+    }
+  }, [step.logs, logsExpanded])
+
+  // 滚动结果区域到底部
+  useEffect(() => {
+    if (resultExpanded && resultContainerRef.current && step.result) {
+      const container = resultContainerRef.current
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight
+      })
+    }
+  }, [step.result, resultExpanded])
 
   return (
     <Card className="overflow-hidden border border-border/40 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg">
@@ -91,7 +113,10 @@ export function WorkflowStep({ step, stepNumber, onExpand }: WorkflowStepProps) 
                 />
               </div>
               {logsExpanded && (
-                <div className="p-5 bg-gradient-to-b from-muted/20 to-muted/5 font-mono text-sm text-muted-foreground max-h-48 overflow-y-auto border-l-3 border-blue-500 dark:border-blue-400">
+                <div 
+                  ref={logsContainerRef}
+                  className="p-5 bg-gradient-to-b from-muted/20 to-muted/5 font-mono text-sm text-muted-foreground max-h-48 overflow-y-auto border-l-3 border-blue-500 dark:border-blue-400"
+                >
                   {step.logs.map((log, i) => (
                     <div key={i} className="py-1.5 flex items-start gap-3">
                       <span className="text-xs text-blue-600 dark:text-blue-400 min-w-fit font-bold">
@@ -129,7 +154,10 @@ export function WorkflowStep({ step, stepNumber, onExpand }: WorkflowStepProps) 
                 />
               </div>
               {resultExpanded && (
-                <div className="p-5 bg-gradient-to-b from-muted/20 to-muted/5 max-h-96 overflow-y-auto border-l-3 border-green-500 dark:border-green-400">
+                <div 
+                  ref={resultContainerRef}
+                  className="p-5 bg-gradient-to-b from-muted/20 to-muted/5 max-h-96 overflow-y-auto border-l-3 border-green-500 dark:border-green-400"
+                >
                   <pre className="font-mono text-xs text-foreground whitespace-pre-wrap break-words bg-gradient-to-br from-card to-card/50 p-4 rounded-lg border border-border/30 shadow-sm">
                     {step.result}
                   </pre>
