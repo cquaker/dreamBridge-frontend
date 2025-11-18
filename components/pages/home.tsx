@@ -16,10 +16,12 @@ import {
 import { useTheme } from "@/components/theme-provider"
 import { ProjectCard } from "@/components/project-card"
 import { NewProjectModal } from "@/components/new-project-modal"
-import { Moon, Sun, Plus, RefreshCw } from "lucide-react"
+import { SchoolCard } from "@/components/schools/school-card"
+import { Moon, Sun, Plus, RefreshCw, GraduationCap, FolderOpen } from "lucide-react"
 import { apiClient } from "@/lib/api/client"
 import { useToast } from "@/hooks/use-toast"
 import type { AudioItem } from "@/lib/types/dreambridge-api-types"
+import type { School } from "@/lib/types/school-types"
 
 export function Home() {
   const router = useRouter()
@@ -32,6 +34,8 @@ export function Home() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [audioToDelete, setAudioToDelete] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [schools, setSchools] = useState<School[]>([])
+  const [schoolsLoading, setSchoolsLoading] = useState(true)
 
   // 从后端获取项目列表
   const fetchProjects = async (showLoading = true) => {
@@ -68,9 +72,25 @@ export function Home() {
     }
   }
 
-  // 页面加载时获取项目列表
+  // 获取学校列表
+  const fetchSchools = async () => {
+    try {
+      const response = await fetch('/api/schools')
+      const result = await response.json()
+      if (result.success && result.data) {
+        setSchools(result.data)
+      }
+    } catch (error) {
+      console.error('Error fetching schools:', error)
+    } finally {
+      setSchoolsLoading(false)
+    }
+  }
+
+  // 页面加载时获取项目列表和学校列表
   useEffect(() => {
     fetchProjects()
+    fetchSchools()
   }, [])
 
   // 创建项目（上传音频）
@@ -151,6 +171,11 @@ export function Home() {
     router.push(`/project/${encodeURIComponent(audioName)}`)
   }
 
+  // 点击学校卡片
+  const handleSchoolClick = (schoolId: string) => {
+    router.push(`/schools/${schoolId}`)
+  }
+
   // 刷新列表
   const handleRefresh = () => {
     fetchProjects(false)
@@ -165,7 +190,7 @@ export function Home() {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md">
                 AI
               </div>
-              <h1 className="text-lg font-semibold text-foreground tracking-tight">学习方案工作流 Agent</h1>
+              <h1 className="text-lg font-semibold text-foreground tracking-tight">留学规划</h1>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -193,7 +218,10 @@ export function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-10">
           <div>
-            <h2 className="text-3xl font-bold text-foreground tracking-tight">项目管理</h2>
+            <div className="flex items-center gap-2 mb-2">
+              <FolderOpen className="w-6 h-6 text-blue-600" />
+              <h2 className="text-3xl font-bold text-foreground tracking-tight">项目管理</h2>
+            </div>
             <p className="text-sm text-muted-foreground mt-2 font-normal">
               {loading ? "加载中..." : `${audios.length} 个项目`}
             </p>
@@ -236,10 +264,11 @@ export function Home() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {audios.map((audio, index) => (
               <div
                 key={audio.name}
+                className="flex w-full"
                 style={{
                   animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
                 }}
@@ -253,6 +282,44 @@ export function Home() {
             ))}
           </div>
         )}
+
+        {/* 学校数据展示区域 */}
+        <div className="mt-16">
+          <div className="flex items-center gap-2 mb-6">
+            <GraduationCap className="w-6 h-6 text-blue-600" />
+            <h2 className="text-3xl font-bold text-foreground tracking-tight">学校数据</h2>
+          </div>
+          
+          {schoolsLoading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+              <p className="text-sm text-muted-foreground mt-4">加载学校列表...</p>
+            </div>
+          ) : schools.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mb-4 shadow-sm">
+                <GraduationCap className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-base text-muted-foreground mb-6 font-normal">暂无学校数据</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {schools.map((school, index) => (
+                <div
+                  key={school.id}
+                  style={{
+                    animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
+                  }}
+                >
+                  <SchoolCard
+                    school={school}
+                    onClick={() => handleSchoolClick(school.id)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </main>
 
       {/* 新建项目弹窗：复用表单逻辑 */}

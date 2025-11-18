@@ -1,0 +1,882 @@
+# 3. 学院与专业列表
+
+*注：以下信息均源自所提供的数据文件。由于数据源可能存在更新延迟或不完整的情况，实际项目列表可能与本报告有所出入，项目数量可能更多。*
+
+### 3.1 按合作大学分类
+
+**BI Norwegian School of Management**（共1个项目）
+**停办项目**：
+- Double MBA programme in Shipping, Offshore and Finance (已停办)
+
+**Domus Academy**（共1个项目）
+**停办项目**：
+- Joint Master’s programme in Interactive Design (已停办)
+
+**Peking University**（共1个项目）
+- MSc (Finance) (Peking University)
+
+**Stevens Institute of Technology**（共1个项目）
+**停办项目**：
+- Dual Master’s programme in Systems and Project Management and Systems Engineering (已停办)
+
+**Technische Universität München (TUM)**（共3个项目）
+- MSc (Aerospace Engineering) (Technische Universität München)
+- MSc (Green Electronics) (Technische Universität München)
+- MSc (Integrated Circuit Design) (Technische Universität München)
+
+**University of Manchester (UoM)**（共1个项目）
+- MSc (Project Management) (University of Manchester)
+
+**University of Warwick**（共3个项目）
+- MSc (Asian Studies) (University of Warwick)
+- MSc (International Political Economy) (University of Warwick)
+- MSc (Strategic Studies) (University of Warwick)
+
+**Waseda University**（共1个项目）
+- MBA (Waseda)
+
+**Wuhan University (WU)**（共5个项目）
+- MSc (Communications Engineering) (Wuhan University)
+- MSc (Computer Control & Automation) (Wuhan University)
+- MSc (Electronics) (Wuhan University)
+- MSc (Power Engineering) (Wuhan University)
+- MSc (Signal Processing) (Wuhan University)
+
+### 3.2 按学科领域分类
+
+**人文与社会科学 (Arts & Social Sciences)**（共122个项目）
+- Bachelor of Arts (Education)
+- Bachelor of Arts in Art and Education
+- Bachelor of Arts in Chinese
+- Bachelor of Arts in Chinese Studies and Education
+- Bachelor of Arts in Creative Writing & Publishing
+- Bachelor of Arts in English
+- Bachelor of Arts in English and History
+- Bachelor of Arts in English and Philosophy
+- Bachelor of Arts in English Language & Linguistics and Education
+- Bachelor of Arts in English Literature and Art History
+- Bachelor of Arts in English Literature and Education
+- Bachelor of Arts in Geography and Education
+- Bachelor of Arts in History
+- Bachelor of Arts in History and Education
+- Bachelor of Arts in History and Linguistics & Multilingual Studies
+- Bachelor of Arts in Linguistics & Multilingual Studies and English
+- Bachelor of Arts in Linguistics and Multilingual Studies
+- Bachelor of Arts in Linguistics & Multilingual Studies and Philosophy
+- Bachelor of Arts in Malay Studies and Education
+- Bachelor of Arts in Music and Education
+- Bachelor of Arts in Philosophy
+- Bachelor of Arts in Philosophy and Chinese
+- Bachelor of Arts in Philosophy and History
+- Bachelor of Arts in Psychology and Linguistics & Multilingual Studies
+- Bachelor of Arts in Tamil Studies and Education
+- Bachelor of Communication Studies
+- Bachelor of Fine Arts
+- Bachelor of Social Sciences in Economics
+- Bachelor of Social Sciences in Economics and Media Analytics
+- Bachelor of Social Sciences in Economics and Psychology
+- Bachelor of Social Sciences in Economics and Public Policy & Global Affairs
+- Bachelor of Social Sciences in Psychology
+- Bachelor of Social Sciences in Psychology and Media Analytics
+- Bachelor of Social Sciences in Public Policy and Global Affairs
+- Bachelor of Social Sciences in Sociology
+- Doctor in Education
+- DOCTOR OF PHILOSOPHY (ADM)
+- DOCTOR OF PHILOSOPHY (ASoE)
+- DOCTOR OF PHILOSOPHY (IGP-GLOBAL ASIA)
+- DOCTOR OF PHILOSOPHY (IGS-GLOBAL ASIA)
+- DOCTOR OF PHILOSOPHY (RSIS)
+- DOCTOR OF PHILOSOPHY (SCI)
+- DOCTOR OF PHILOSOPHY (SOH)
+- DOCTOR OF PHILOSOPHY (SSS)
+- MA in Digital Humanities
+- Master in Educational Administration
+- Master of Arts (ADM)
+- Master of Arts (Applied Linguistics)
+- Master of Arts (Applied Psychology)
+- Master of Arts (Contemporary China)
+- Master of Arts (Counselling & Guidance)
+- Master of Arts (Creative Writing & Publishing)
+- Master of Arts (Educational Management)
+- Master of Arts (Instructional Design and Technology)
+- Master of Arts (Leadership and Educational Change)
+- Master of Arts (Linguistics)
+- Master of Arts (Museum Studies & Curatorial Practices)
+- Master of Arts (SOH)
+- Master of Arts (SSS)
+- Master of Arts (Translation & Interpretation)
+- Master of Arts in Humanities Education
+- Master of Arts in Professional Education
+- Master of Arts in Teaching Chinese as an International Lang.
+- Master of Communication Studies
+- Master of Education
+- Master of Media & Communication
+- Master of Public Administration - Chinese
+- Master of Public Administration - English
+- Master of Social Sciences (China & Global Governance)
+- Minor in Archaeology
+- Minor in Art History
+- Minor in Chinese
+- Minor in Chinese Creative Writing
+- Minor in Communication Studies
+- Minor in Creative Writing
+- Minor in Economics
+- Minor in English
+- Minor in Environmental Humanities
+- Minor in Film
+- Minor in Gender and Diversity Studies
+- Minor in Geography and Urban Studies
+- Minor in Global Asia
+- Minor in Health and Society
+- Minor in History
+- Minor in Linguistics and Multilingual Studies
+- Minor in Modern Languages
+- Minor in Philosophy
+- Minor in Photography
+- Minor in Psychology
+- Minor in Public Policy and Global Affairs
+- Minor in Science, Technology, and Society
+- Minor in Sociology
+- Minor in Translation
+- MSc (Applied Economics)
+- MSc (Applied Gerontology)
+- MSc (Asian Studies)
+- MSc (Asian Studies) (University of Warwick) (参见3.1节 University of Warwick)
+- MSc (International Political Economy)
+- MSc (International Political Economy) (University of Warwick) (参见3.1节 University of Warwick)
+- MSc (International Relations)
+- MSc (Managerial Economics)
+- MSc (Managerial Economics) - Chinese
+- MSc (Managerial Economics) - English
+- MSc (Strategic Studies)
+- MSc (Strategic Studies) (University of Warwick) (参见3.1节 University of Warwick)
+- NIE DOCTOR IN EDUCATION
+- Philosophy, Politics, and Economics
+- Postgraduate Diploma in Education (Junior College)
+- Postgraduate Diploma in Education (Physical Education - Primary)
+- Postgraduate Diploma in Education (Physical Education - Secondary)
+- Postgraduate Diploma in Education (Primary)
+- Postgraduate Diploma in Education (Secondary)
+
+**停办项目**：
+- Master of Arts (Contemporary China) (Part-time) (已停办)
+- Master of Mass Communication (已停办)
+- MSc (International Political Economy) - Warwick (已停办)
+
+**商科 (Business)**（共59个项目）
+- Accountancy for Future Leaders (Bachelor of Accountancy in Sustainability Management and Analytics)
+- Bachelor of Accountancy
+- Bachelor of Accountancy and Business
+- Bachelor of Accountancy and Data Science & Artificial Intelligence
+- Bachelor of Applied Computing in Finance
+- Bachelor of Business
+- Bachelor of Business and Computer Engineering
+- Bachelor of Business and Computing
+- Double Degree in Accountancy and Data Science & Artificial Intelligence
+- Double Degree Business and Accountancy
+- DOCTOR OF PHILOSOPHY (NBS)
+- Executive Certificate in Carbon Markets
+- Executive Certificate in Corporate and Environmental Sustainability
+- Executive MBA Programme (English)
+- Executive MBA Programme (Shanghai)
+- Executive Master of Science in Sustainability Management
+- FlexiMasters in Business AI and Technology
+- FlexiMasters in Sustainability Business Ecosystems
+- Master in Management
+- Master of Business
+- MBA
+- MBA (Banking & Finance)
+- MBA (Business Analytics)
+- MBA (Human Capital Management)
+- MBA (Marketing Management)
+- MBA (Nanyang Fellows)
+- MBA (Professional)
+- MBA (Strategy & Innovation)
+- MBA (Sustainability & Innovation)
+- MBA (Waseda) (参见3.1节 Waseda University)
+- MSc (Accountancy)
+- MSc (Accountancy) - Data Analytics
+- MSc (Actuarial and Risk Analytics)
+- MSc (Asset & Wealth Management)
+- MSc (Business Analytics)
+- MSc (Finance)
+- MSc (Finance) (Peking University) (参见3.1节 Peking University)
+- MSc (Financial Engineering)
+- MSc (Human Capital Mgt.)
+- MSc (Management)
+- MSc (Marketing & Consumer Insight)
+- MSc (Marketing Science)
+- MSc (Modelling and Simulation)
+- MSc (Strategy)
+- MSc (Technology Management)
+- MSc (Technopreneurship & Innovation) - Chinese
+- MSc (Technopreneurship & Innovation) - English
+- Nanyang Executive MBA
+- Nanyang Executive MBA (Chinese)
+- Nanyang Fellows MBA
+- Nanyang MBA
+- Nanyang Professional MBA
+- PMBA (International Trading)
+- Second Major in Business
+- Second Major in Business (International Trading Programme (ITP))
+- Second Major in Entrepreneurship
+
+**停办项目**：
+- Double MBA programme in Shipping, Offshore and Finance (BI Norwegian School of Management) (参见3.1节 BI Norwegian School of Management)
+- MBA Bilingual (已停办)
+- MBA Chinese (已停办)
+- MSc (Marketing & Consumer Insight) (Part-time) (已停办)
+
+**信息技术与计算机科学 (IT & Computer Science)**（共39个项目）
+- Artificial Intelligence and Society
+- Bachelor of Computing (Hons) in Artificial Intelligence and Society
+- Bachelor of Computing (Hons) in Computer Science with a Second Major in Sustainability
+- Bachelor of Computing (Hons) in Data Science and Artificial Intelligence
+- Bachelor of Engineering (Computer Engineering)
+- Bachelor of Engineering (Computer Engineering) and Economics
+- Bachelor of Engineering (Computer Science)
+- Bachelor of Engineering (Computer Science) and Economics
+- Bachelor of Science in Data Science and Artificial Intelligence
+- Bachelor of Science in Mathematical and Computer Sciences
+- Bachelor of Technology in Computing (A SkillsFuture Work-Study Degree)
+- Computing
+- DOCTOR OF PHILOSOPHY (CCDS)
+- DOCTOR OF PHILOSOPHY (SCSE)
+- Master of Computing In Applied AI
+- Master of Engineering (CCDS)
+- Master of Engineering (SCSE)
+- Minor in Artificial Intelligence
+- MSc (Analytics)
+- MSc (Artificial Intelligence)
+- MSc (Computer Control & Automation)
+- MSc (Computer Control & Automation) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Cyber Security)
+- MSc (Data Science)
+- MSc (Financial Technology)
+- MSc (Financial Technology) - Digital Financial Services
+- MSc (Financial Technology) - Intelligent Process Automation
+- MSc (Information Studies)
+- MSc (Information Systems)
+- MSc (Knowledge Management)
+- MSc (Signal Processing)
+- MSc (Signal Processing & Machine Learning)
+- MSc (Signal Processing) (Wuhan University) (参见3.1节 Wuhan University)
+- Second Major in Data Analytics
+
+**停办项目**：
+- MSc (Computer Control & Automation) WU (已停办)
+- MSc (Digital Media Technology) (已停办)
+- MSc (Embedded Systems) (已停办)
+- MSc (Signal Processing) WU (已停办)
+- MSc (Signal Processing) - Prior to AY2017 (已停办)
+
+**工程与技术 (Engineering & Technology)**（共88个项目）
+- Bachelor of Engineering (Aerospace Engineering)
+- Bachelor of Engineering (Aerospace Engineering) and Economics
+- Bachelor of Engineering (Bioengineering)
+- Bachelor of Engineering (Bioengineering) and Economics
+- Bachelor of Engineering (Chemical and Biomolecular Engineering)
+- Bachelor of Engineering (Chemical and Biomolecular Engineering) and Economics
+- Bachelor of Engineering (Civil Engineering)
+- Bachelor of Engineering (Civil Engineering) and Economics
+- Bachelor of Engineering (Electrical & Electronic Engineering) with Second Major in Society and Urban Systems
+- Bachelor of Engineering (Electrical & Electronic Engineering) with Second Major in Sustainability
+- Bachelor of Engineering (Electrical and Electronic Engineering)
+- Bachelor of Engineering (Electrical and Electronic Engineering) and Economics
+- Bachelor of Engineering (Environmental Engineering)
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Business
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Data Analytics
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Entrepreneurship
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Future Foods
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Society & Urban Systems
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Sustainability
+- Bachelor of Engineering (Information Engineering and Media)
+- Bachelor of Engineering (Information Engineering and Media) (IEM) with Second Major in Sustainability
+- Bachelor of Engineering (Information Engineering and Media) and Economics
+- Bachelor of Engineering (Materials Engineering)
+- Bachelor of Engineering (Materials Engineering) and Economics
+- Bachelor of Engineering (Mechanical Engineering)
+- Bachelor of Engineering (Mechanical Engineering) and Economics
+- Bachelor of Engineering (Mechanical Engineering) with a Second Major in Society & Urban Systems
+- Bachelor of Engineering (Robotics)
+- Bachelor of Engineering (Robotics) with a Second Major in Society & Urban Systems
+- Bachelor of Engineering Science
+- Bachelor of Engineering Science with Double Major in Process Engineering and Synthetic Chemistry
+- DOCTOR OF PHILOSOPHY (CCEB-CHEMICAL & BIOMEDICAL ENGINEERING)
+- DOCTOR OF PHILOSOPHY (CEE)
+- DOCTOR OF PHILOSOPHY (EEE)
+- DOCTOR OF PHILOSOPHY (IGP-ERI@N)
+- DOCTOR OF PHILOSOPHY (IGP-NEWRI)
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) ERIAN
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) NEWRI
+- DOCTOR OF PHILOSOPHY (MAE)
+- DOCTOR OF PHILOSOPHY (MSE)
+- DOCTOR OF PHILOSOPHY (SCBE)
+- Double Degree in Bachelor of Engineering in Environmental Engineering and Bachelor of Social Science in Economics
+- Master of Engineering (CCEB)
+- Master of Engineering (CEE)
+- Master of Engineering (EEE)
+- Master of Engineering (MAE)
+- Master of Engineering (MSE)
+- Master of Engineering (SCBE)
+- Master of Science (BLOCKCHAIN)
+- Minor in Design and Systems Thinking
+- Minor in Systems Management
+- MSc (Aerospace Engineering) (Technische Universität München) (参见3.1节 Technische Universität München)
+- MSc (Chemical Engineering)
+- MSc (Civil Engineering)
+- MSc (Communications Engineering)
+- MSc (Communications Engineering) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Electronics)
+- MSc (Electronics) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Engineering Management)
+- MSc (Environmental Engineering)
+- MSc (Green Electronics) (Technische Universität München) (参见3.1节 Technische Universität München)
+- MSc (Integrated Circuit Design) (Technische Universität München) (参见3.1节 Technische Universität München)
+- MSc (International Construction Mgt)
+- MSc (Manufacturing Systems & Engineering)
+- MSc (Materials Science & Engineering)
+- MSc (Mechanical Engineering)
+- MSc (Nanotechnology and Nanoscience)
+- MSc (Power Engineering)
+- MSc (Power Engineering) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Precision Engineering)
+- MSc (Project Management)
+- MSc (Project Management) (University of Manchester) (参见3.1节 University of Manchester)
+- MSc (Smart Manufacturing)
+- MSc (Smart Product Design)
+- MSc (Supply Chain & Logistics)
+- MSc (Supply Chain Engineering)
+- MSc (Sustainability and Environmental Engineering)
+- MSc (Systems & Project Management)
+- Professional Certificate in Chartered Engineer (SG) in Sustainability
+
+**停办项目**：
+- Dual Master’s programme in Systems and Project Management and Systems Engineering (Stevens Institute of Technology) (参见3.1节 Stevens Institute of Technology)
+- MSc (Communications Engineering) - Prior to AY2017 (已停办)
+- MSc (Communications Engineering) WU (已停办)
+- MSc (Electronics) WU (已停办)
+- MSc (Power Engineering) WU (已停办)
+
+**健康科学 (Health Sciences)**（共28个项目）
+- Bachelor of Engineering in Bioengineering with Second Major in Sustainability
+- Bachelor of Medicine and Bachelor of Surgery (MBBS)
+- Bachelor of Science in Biological Sciences
+- Bachelor of Science in Biological Sciences and Psychology
+- Bachelor of Science in Biomedical Sciences & Bachelor of Medicine (Chinese Medicine)
+- Bachelor of Science in Biomedical Sciences and BioBusiness
+- Bachelor of Chinese Medicine
+- DOCTOR OF PHILOSOPHY (IGP-HEALTHTECH)
+- DOCTOR OF PHILOSOPHY (IGP-NEUROSCIENCE)
+- DOCTOR OF PHILOSOPHY (IGS-FUTURE HEALTHCARE) HEALTHTECH NTU
+- DOCTOR OF PHILOSOPHY (IGS-FUTURE HEALTHCARE) NNIN
+- DOCTOR OF PHILOSOPHY (IGS-HEALTHY SOCIETY) HEALTHTECH NTU
+- DOCTOR OF PHILOSOPHY (IGS-HEALTHY SOCIETY) NNIN
+- DOCTOR OF PHILOSOPHY (LKCMEDICINE)
+- DOCTOR OF PHILOSOPHY (SBS)
+- Graduate Diploma in Sports Medicine
+- Master of Science (SBS)
+- MSc (Biomedical Data Science)
+- MSc (Biomedical Engineering)
+- Musculoskeletal (MSK) Ultrasound Course
+- Sports Medicine Theory Course
+
+**停办项目**：
+- Bachelor of Science in Biomedical Sciences & Bachelor of Medicine (Chinese Medicine) (停办过渡期，截止日期：2025-08-31)
+- DOCTOR OF PHILOSOPHY (IGP-FUTURE LEARNING) CRADLE
+- DOCTOR OF PHILOSOPHY (IGS-HEALTHY SOCIETY) ARISE
+- DOCTOR OF PHILOSOPHY (IGS-SECURE COMMUNITY) IMI
+- DOCTOR OF PHILOSOPHY (IGS-SECURE COMMUNITY) LILY
+- DOCTOR OF PHILOSOPHY (IGS-SECURE COMMUNITY) MAGIC
+- DOCTOR OF PHILOSOPHY (IGS-SECURE COMMUNITY) ROSE
+
+**其他专业 (Others)**（共46个项目）
+- Bachelor of Science (Education)
+- Bachelor of Science (Sport Science and Management)
+- Bachelor of Science in Applied Physics
+- Bachelor of Science in Biology and Education
+- Bachelor of Science in Chemistry and Biological Chemistry
+- Bachelor of Science in Chemistry and Biological Chemistry with Second Major in Environmental Science
+- Bachelor of Science in Chemistry and Biological Chemistry with Second Major in Sustainability
+- Bachelor of Science in Chemistry and Education
+- Bachelor of Science in Environmental Earth Systems Science
+- Bachelor of Science in Environmental Earth Systems Science and Public Policy and Global Affairs
+- Bachelor of Science in Environmental Earth Systems Science with 2nd Major in Data Analytics (ESDA)
+- Bachelor of Science in Environmental Earth Systems Science with 2nd Major in Entrepreneurship (ESET)
+- Bachelor of Science in Environmental Earth Systems Science with 2nd Major in Sustainability (ESSN)
+- Bachelor of Science in Mathematical Sciences
+- Bachelor of Science in Mathematical Sciences and Economics
+- Bachelor of Science in Mathematics & Computational Thinking and Education
+- Bachelor of Science in Mathematics and Economics
+- Bachelor of Science in Physics & Energy Studies and Education
+- Bachelor of Science in Physics and Mathematical Sciences
+- Bachelor of Science in Sport Science and Education
+- Certificate Programme in Sustainable Finance
+- DOCTOR OF PHILOSOPHY (CCEB-CHEMISTRY)
+- DOCTOR OF PHILOSOPHY (IGP-AI-X)
+- DOCTOR OF PHILOSOPHY (IGP-ALIBABA-NTU JRI)
+- DOCTOR OF PHILOSOPHY (IGP-COLLABORATIVE INITIATIVE)
+- DOCTOR OF PHILOSOPHY (IGP-CRADLE)
+- DOCTOR OF PHILOSOPHY (IGP-EOS)
+- DOCTOR OF PHILOSOPHY (IGP-ICRM)
+- DOCTOR OF PHILOSOPHY (IGP-IDMXS)
+- DOCTOR OF PHILOSOPHY (IGP-NISTH)
+- DOCTOR OF PHILOSOPHY (IGP-ROSE)
+- DOCTOR OF PHILOSOPHY (IGP-SCELSE)
+- DOCTOR OF PHILOSOPHY (IGP-SCRIPTS)
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) COMPLEXITY
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) EOS
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) ICRM
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) SCELSE
+- DOCTOR OF PHILOSOPHY (SPMS)
+- Graduate Certificate in Sustainability - Strategy, Energy, Environment, and Circularity
+- Master of Science (CCEB)
+- Master of Science (SPMS)
+- MSc (Chemical Sciences & Instrumentation)
+- MSc (Environmental Sustainability Science)
+- MSc (Maritime Studies)
+- MSc (Precision Scientific Instrumentation)
+- Second Major in Sustainability
+
+**停办项目**：
+- DOCTOR OF PHILOSOPHY (IGS-NEW MEDIA) IMI (已停办)
+- DOCTOR OF PHILOSOPHY (IGS-NEW MEDIA) LILY (已停办)
+- DOCTOR OF PHILOSOPHY (IGS-NEW MEDIA) MAGIC (已停办)
+- DOCTOR OF PHILOSOPHY (IGS-NEW MEDIA) ROSE (已停办)
+- DOCTOR OF PHILOSOPHY (IGS-Sustainable Earth) (已停办)
+- Master of Teaching (已停办)
+
+### 3.3 按学术级别分类
+
+**硕士及研究生文凭 (Postgraduate/Masters)**（共195个项目）
+- Doctor in Education (参见3.2节 人文与社会科学)
+- DOCTOR OF PHILOSOPHY (ADM) (参见3.2节 人文与社会科学)
+- DOCTOR OF PHILOSOPHY (ASOE) (参见3.2节 人文与社会科学)
+- DOCTOR OF PHILOSOPHY (CCDS) (参见3.2节 信息技术与计算机科学)
+- DOCTOR OF PHILOSOPHY (CCEB-CHEMICAL & BIOMEDICAL ENGINEERING) (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (CCEB-CHEMISTRY) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (CEE) (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (EEE) (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (IGP-AI-X) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-ALIBABA-NTU JRI) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-COLLABORATIVE INITIATIVE) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-CRADLE) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-EOS) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-ERI@N) (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (IGP-GLOBAL ASIA) (参见3.2节 人文与社会科学)
+- DOCTOR OF PHILOSOPHY (IGP-HEALTHTECH) (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGP-ICRM) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-IDMXS) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-NEUROSCIENCE) (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGP-NEWRI) (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (IGP-NISTH) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-ROSE) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-SCELSE) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGP-SCRIPTS) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGS-FUTURE HEALTHCARE) HEALTHTECH NTU (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-FUTURE HEALTHCARE) NNIN (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-GLOBAL ASIA) (参见3.2节 人文与社会科学)
+- DOCTOR OF PHILOSOPHY (IGS-HEALTHY SOCIETY) HEALTHTECH NTU (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-HEALTHY SOCIETY) NNIN (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) COMPLEXITY (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) EOS (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) ERIAN (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) ICRM (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) NEWRI (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (IGS-SUSTAINABLE EARTH) SCELSE (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (LKCMEDICINE) (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (MAE) (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (MSE) (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (NBS) (参见3.2节 商科)
+- DOCTOR OF PHILOSOPHY (RSIS) (参见3.2节 人文与社会科学)
+- DOCTOR OF PHILOSOPHY (SBS) (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (SCBE) (参见3.2节 工程与技术)
+- DOCTOR OF PHILOSOPHY (SCI) (参见3.2节 人文与社会科学)
+- DOCTOR OF PHILOSOPHY (SCSE) (参见3.2节 信息技术与计算机科学)
+- DOCTOR OF PHILOSOPHY (SOH) (参见3.2节 人文与社会科学)
+- DOCTOR OF PHILOSOPHY (SPMS) (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (SSS) (参见3.2节 人文与社会科学)
+- Executive MBA Programme (English) (参见3.2节 商科)
+- Executive MBA Programme (Shanghai) (参见3.2节 商科)
+- Executive Master of Science in Sustainability Management (参见3.2节 商科)
+- Graduate Diploma in Sports Medicine (参见3.2节 健康科学)
+- MA in Digital Humanities (参见3.2节 人文与社会科学)
+- Master in Educational Administration (参见3.2节 人文与社会科学)
+- Master in Management (参见3.2节 商科)
+- Master of Arts (ADM) (参见3.2节 人文与社会科学)
+- Master of Arts (Applied Linguistics) (参见3.2节 人文与社会科学)
+- Master of Arts (Applied Psychology) (参见3.2节 人文与社会科学)
+- Master of Arts (Contemporary China) (参见3.2节 人文与社会科学)
+- Master of Arts (Counselling & Guidance) (参见3.2节 人文与社会科学)
+- Master of Arts (Creative Writing & Publishing) (参见3.2节 人文与社会科学)
+- Master of Arts (Educational Management) (参见3.2节 人文与社会科学)
+- Master of Arts (Instructional Design and Technology) (参见3.2节 人文与社会科学)
+- Master of Arts (Leadership and Educational Change) (参见3.2节 人文与社会科学)
+- Master of Arts (Linguistics) (参见3.2节 人文与社会科学)
+- Master of Arts (Museum Studies & Curatorial Practices) (参见3.2节 人文与社会科学)
+- Master of Arts (SOH) (参见3.2节 人文与社会科学)
+- Master of Arts (SSS) (参见3.2节 人文与社会科学)
+- Master of Arts (Translation & Interpretation) (参见3.2节 人文与社会科学)
+- Master of Arts in Humanities Education (参见3.2节 人文与社会科学)
+- Master of Arts in Professional Education (参见3.2节 人文与社会科学)
+- Master of Arts in Teaching Chinese as an International Lang. (参见3.2节 人文与社会科学)
+- Master of Business (参见3.2节 商科)
+- Master of Communication Studies (参见3.2节 人文与社会科学)
+- Master of Computing In Applied AI (参见3.2节 信息技术与计算机科学)
+- Master of Education (参见3.2节 人文与社会科学)
+- Master of Engineering (CCDS) (参见3.2节 信息技术与计算机科学)
+- Master of Engineering (CCEB) (参见3.2节 工程与技术)
+- Master of Engineering (CEE) (参见3.2节 工程与技术)
+- Master of Engineering (EEE) (参见3.2节 工程与技术)
+- Master of Engineering (MAE) (参见3.2节 工程与技术)
+- Master of Engineering (MSE) (参见3.2节 工程与技术)
+- Master of Engineering (SCBE) (参见3.2节 工程与技术)
+- Master of Engineering (SCSE) (参见3.2节 信息技术与计算机科学)
+- Master of Media & Communication (参见3.2节 人文与社会科学)
+- Master of Public Administration - Chinese (参见3.2节 人文与社会科学)
+- Master of Public Administration - English (参见3.2节 人文与社会科学)
+- Master of Science (CCEB) (参见3.2节 其他专业)
+- Master of Science (SBS) (参见3.2节 健康科学)
+- Master of Science (SPMS) (参见3.2节 其他专业)
+- Master of Social Sciences (China & Global Governance) (参见3.2节 人文与社会科学)
+- MBA (参见3.2节 商科)
+- MBA (Banking & Finance) (参见3.2节 商科)
+- MBA (Business Analytics) (参见3.2节 商科)
+- MBA (Human Capital Management) (参见3.2节 商科)
+- MBA (Marketing Management) (参见3.2节 商科)
+- MBA (Nanyang Fellows) (参见3.2节 商科)
+- MBA (Professional) (参见3.2节 商科)
+- MBA (Strategy & Innovation) (参见3.2节 商科)
+- MBA (Sustainability & Innovation) (参见3.2节 商科)
+- MBA (Waseda) (参见3.1节 Waseda University)
+- MSc (Accountancy) (参见3.2节 商科)
+- MSc (Accountancy) - Data Analytics (参见3.2节 商科)
+- MSc (Actuarial and Risk Analytics) (参见3.2节 商科)
+- MSc (Aerospace Engineering) (Technische Universität München) (参见3.1节 Technische Universität München)
+- MSc (Analytics) (参见3.2节 信息技术与计算机科学)
+- MSc (Applied Economics) (参见3.2节 人文与社会科学)
+- MSc (Applied Gerontology) (参见3.2节 人文与社会科学)
+- MSc (Artificial Intelligence) (参见3.2节 信息技术与计算机科学)
+- MSc (Asian Studies) (参见3.2节 人文与社会科学)
+- MSc (Asian Studies) (University of Warwick) (参见3.1节 University of Warwick)
+- MSc (Asset & Wealth Management) (参见3.2节 商科)
+- MSc (Biomedical Data Science) (参见3.2节 健康科学)
+- MSc (Biomedical Engineering) (参见3.2节 健康科学)
+- MSc (Business Analytics) (参见3.2节 商科)
+- MSc (Chemical Engineering) (参见3.2节 工程与技术)
+- MSc (Chemical Sciences & Instrumentation) (参见3.2节 其他专业)
+- MSc (Civil Engineering) (参见3.2节 工程与技术)
+- MSc (Communications Engineering) (参见3.2节 工程与技术)
+- MSc (Communications Engineering) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Computer Control & Automation) (参见3.2节 信息技术与计算机科学)
+- MSc (Computer Control & Automation) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Cyber Security) (参见3.2节 信息技术与计算机科学)
+- MSc (Data Science) (参见3.2节 信息技术与计算机科学)
+- MSc (Electronics) (参见3.2节 工程与技术)
+- MSc (Electronics) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Engineering Management) (参见3.2节 工程与技术)
+- MSc (Environmental Engineering) (参见3.2节 工程与技术)
+- MSc (Environmental Sustainability Science) (参见3.2节 其他专业)
+- MSc (Finance) (参见3.2节 商科)
+- MSc (Finance) (Peking University) (参见3.1节 Peking University)
+- MSc (Financial Engineering) (参见3.2节 商科)
+- MSc (Financial Technology) (参见3.2节 信息技术与计算机科学)
+- MSc (Financial Technology) - Digital Financial Services (参见3.2节 信息技术与计算机科学)
+- MSc (Financial Technology) - Intelligent Process Automation (参见3.2节 信息技术与计算机科学)
+- MSc (Green Electronics) (Technische Universität München) (参见3.1节 Technische Universität München)
+- MSc (Human Capital Mgt.) (参见3.2节 商科)
+- MSc (Information Studies) (参见3.2节 信息技术与计算机科学)
+- MSc (Information Systems) (参见3.2节 信息技术与计算机科学)
+- MSc (Integrated Circuit Design) (Technische Universität München) (参见3.1节 Technische Universität München)
+- MSc (International Construction Mgt) (参见3.2节 工程与技术)
+- MSc (International Political Economy) (参见3.2节 人文与社会科学)
+- MSc (International Political Economy) (University of Warwick) (参见3.1节 University of Warwick)
+- MSc (International Relations) (参见3.2节 人文与社会科学)
+- MSc (Knowledge Management) (参见3.2节 信息技术与计算机科学)
+- MSc (Management) (参见3.2节 商科)
+- MSc (Managerial Economics) (参见3.2节 人文与社会科学)
+- MSc (Managerial Economics) - Chinese (参见3.2节 人文与社会科学)
+- MSc (Managerial Economics) - English (参见3.2节 人文与社会科学)
+- MSc (Manufacturing Systems & Engineering) (参见3.2节 工程与技术)
+- MSc (Maritime Studies) (参见3.2节 其他专业)
+- MSc (Marketing & Consumer Insight) (参见3.2节 商科)
+- MSc (Marketing Science) (参见3.2节 商科)
+- MSc (Materials Science & Engineering) (参见3.2节 工程与技术)
+- MSc (Mechanical Engineering) (参见3.2节 工程与技术)
+- MSc (Modelling and Simulation) (参见3.2节 商科)
+- MSc (Nanotechnology and Nanoscience) (参见3.2节 工程与技术)
+- MSc (Power Engineering) (参见3.2节 工程与技术)
+- MSc (Power Engineering) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Precision Engineering) (参见3.2节 工程与技术)
+- MSc (Precision Scientific Instrumentation) (参见3.2节 其他专业)
+- MSc (Project Management) (参见3.2节 工程与技术)
+- MSc (Project Management) (University of Manchester) (参见3.1节 University of Manchester)
+- MSc (Signal Processing) (参见3.2节 信息技术与计算机科学)
+- MSc (Signal Processing & Machine Learning) (参见3.2节 信息技术与计算机科学)
+- MSc (Signal Processing) (Wuhan University) (参见3.1节 Wuhan University)
+- MSc (Smart Manufacturing) (参见3.2节 工程与技术)
+- MSc (Smart Product Design) (参见3.2节 工程与技术)
+- MSc (Strategic Studies) (参见3.2节 人文与社会科学)
+- MSc (Strategic Studies) (University of Warwick) (参见3.1节 University of Warwick)
+- MSc (Strategy) (参见3.2节 商科)
+- MSc (Supply Chain & Logistics) (参见3.2节 工程与技术)
+- MSc (Supply Chain Engineering) (参见3.2节 工程与技术)
+- MSc (Sustainability and Environmental Engineering) (参见3.2节 工程与技术)
+- MSc (Systems & Project Management) (参见3.2节 工程与技术)
+- MSc (Technology Management) (参见3.2节 商科)
+- MSc (Technopreneurship & Innovation) - Chinese (参见3.2节 商科)
+- MSc (Technopreneurship & Innovation) - English (参见3.2节 商科)
+- Nanyang Executive MBA (参见3.2节 商科)
+- Nanyang Executive MBA (Chinese) (参见3.2节 商科)
+- Nanyang Fellows MBA (参见3.2节 商科)
+- Nanyang MBA (参见3.2节 商科)
+- Nanyang Professional MBA (参见3.2节 商科)
+- NIE DOCTOR IN EDUCATION (参见3.2节 人文与社会科学)
+- PMBA (International Trading) (参见3.2节 商科)
+- Postgraduate Diploma in Education (Junior College) (参见3.2节 人文与社会科学)
+- Postgraduate Diploma in Education (Physical Education - Primary) (参见3.2节 人文与社会科学)
+- Postgraduate Diploma in Education (Physical Education - Secondary) (参见3.2节 人文与社会科学)
+- Postgraduate Diploma in Education (Primary) (参见3.2节 人文与社会科学)
+- Postgraduate Diploma in Education (Secondary) (参见3.2节 人文与社会科学)
+
+**停办项目**：
+- Double MBA programme in Shipping, Offshore and Finance (BI Norwegian School of Management) (参见3.1节 BI Norwegian School of Management)
+- DOCTOR OF PHILOSOPHY (IGP-FUTURE LEARNING) CRADLE (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-HEALTHY SOCIETY) ARISE (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-NEW MEDIA) IMI (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGS-NEW MEDIA) LILY (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGS-NEW MEDIA) MAGIC (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGS-NEW MEDIA) ROSE (参见3.2节 其他专业)
+- DOCTOR OF PHILOSOPHY (IGS-SECURE COMMUNITY) IMI (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-SECURE COMMUNITY) LILY (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-SECURE COMMUNITY) MAGIC (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-SECURE COMMUNITY) ROSE (参见3.2节 健康科学)
+- DOCTOR OF PHILOSOPHY (IGS-Sustainable Earth) (参见3.2节 其他专业)
+- Dual Master’s programme in Systems and Project Management and Systems Engineering (Stevens Institute of Technology) (参见3.1节 Stevens Institute of Technology)
+- Joint Master’s programme in Interactive Design (Domus Academy) (参见3.1节 Domus Academy)
+- Master of Arts (Contemporary China) (Part-time) (参见3.2节 人文与社会科学)
+- Master of Mass Communication (参见3.2节 人文与社会科学)
+- Master of Teaching (参见3.2节 其他专业)
+- MBA Bilingual (参见3.2节 商科)
+- MBA Chinese (参见3.2节 商科)
+- MSc (Communications Engineering) - Prior to AY2017 (参见3.2节 工程与技术)
+- MSc (Communications Engineering) WU (参见3.2节 工程与技术)
+- MSc (Computer Control & Automation) WU (参见3.2节 信息技术与计算机科学)
+- MSc (Digital Media Technology) (参见3.2节 信息技术与计算机科学)
+- MSc (Electronics) WU (参见3.2节 工程与技术)
+- MSc (Embedded Systems) (参见3.2节 信息技术与计算机科学)
+- MSc (International Political Economy) - Warwick (参见3.2节 人文与社会科学)
+- MSc (Marketing & Consumer Insight) (Part-time) (参见3.2节 商科)
+- MSc (Power Engineering) WU (参见3.2节 工程与技术)
+- MSc (Signal Processing) - Prior to AY2017 (参见3.2节 信息技术与计算机科学)
+- MSc (Signal Processing) WU (参见3.2节 信息技术与计算机科学)
+
+**学士 (Bachelor's)**（共141个项目）
+- Accountancy for Future Leaders (Bachelor of Accountancy in Sustainability Management and Analytics) (参见3.2节 商科)
+- Artificial Intelligence and Society (参见3.2节 信息技术与计算机科学)
+- Bachelor of Accountancy (参见3.2节 商科)
+- Bachelor of Accountancy and Business (参见3.2节 商科)
+- Bachelor of Accountancy and Data Science & Artificial Intelligence (参见3.2节 商科)
+- Bachelor of Applied Computing in Finance (参见3.2节 商科)
+- Bachelor of Arts (Education) (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Art and Education (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Chinese (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Chinese Studies and Education (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Creative Writing & Publishing (参见3.2节 人文与社会科学)
+- Bachelor of Arts in English (参见3.2节 人文与社会科学)
+- Bachelor of Arts in English and History (参见3.2节 人文与社会科学)
+- Bachelor of Arts in English and Philosophy (参见3.2节 人文与社会科学)
+- Bachelor of Arts in English Language & Linguistics and Education (参见3.2节 人文与社会科学)
+- Bachelor of Arts in English Literature and Art History (参见3.2节 人文与社会科学)
+- Bachelor of Arts in English Literature and Education (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Geography and Education (参见3.2节 人文与社会科学)
+- Bachelor of Arts in History (参见3.2节 人文与社会科学)
+- Bachelor of Arts in History and Education (参见3.2节 人文与社会科学)
+- Bachelor of Arts in History and Linguistics & Multilingual Studies (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Linguistics & Multilingual Studies and English (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Linguistics and Multilingual Studies (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Linguistics & Multilingual Studies and Philosophy (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Malay Studies and Education (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Music and Education (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Philosophy (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Philosophy and Chinese (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Philosophy and History (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Psychology and Linguistics & Multilingual Studies (参见3.2节 人文与社会科学)
+- Bachelor of Arts in Tamil Studies and Education (参见3.2节 人文与社会科学)
+- Bachelor of Business (参见3.2节 商科)
+- Bachelor of Business and Computer Engineering (参见3.2节 商科)
+- Bachelor of Business and Computing (参见3.2节 商科)
+- Bachelor of Chinese Medicine (参见3.2节 健康科学)
+- Bachelor of Communication Studies (参见3.2节 人文与社会科学)
+- Bachelor of Computing (Hons) in Artificial Intelligence and Society (参见3.2节 信息技术与计算机科学)
+- Bachelor of Computing (Hons) in Computer Science with a Second Major in Sustainability (参见3.2节 信息技术与计算机科学)
+- Bachelor of Computing (Hons) in Data Science and Artificial Intelligence (参见3.2节 信息技术与计算机科学)
+- Bachelor of Engineering (Aerospace Engineering) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Aerospace Engineering) and Economics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Bioengineering) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Bioengineering) and Economics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Chemical and Biomolecular Engineering) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Chemical and Biomolecular Engineering) and Economics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Civil Engineering) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Civil Engineering) and Economics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Computer Engineering) (参见3.2节 信息技术与计算机科学)
+- Bachelor of Engineering (Computer Engineering) and Economics (参见3.2节 信息技术与计算机科学)
+- Bachelor of Engineering (Computer Science) (参见3.2节 信息技术与计算机科学)
+- Bachelor of Engineering (Computer Science) and Economics (参见3.2节 信息技术与计算机科学)
+- Bachelor of Engineering (Electrical & Electronic Engineering) with Second Major in Society and Urban Systems (参见3.2节 工程与技术)
+- Bachelor of Engineering (Electrical & Electronic Engineering) with Second Major in Sustainability (参见3.2节 工程与技术)
+- Bachelor of Engineering (Electrical and Electronic Engineering) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Electrical and Electronic Engineering) and Economics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Environmental Engineering) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Business (参见3.2节 工程与技术)
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Data Analytics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Entrepreneurship (参见3.2节 工程与技术)
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Future Foods (参见3.2节 工程与技术)
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Society & Urban Systems (参见3.2节 工程与技术)
+- Bachelor of Engineering (Environmental Engineering) with Second Major in Sustainability (参见3.2节 工程与技术)
+- Bachelor of Engineering (Information Engineering and Media) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Information Engineering and Media) (IEM) with Second Major in Sustainability (参见3.2节 工程与技术)
+- Bachelor of Engineering (Information Engineering and Media) and Economics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Materials Engineering) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Materials Engineering) and Economics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Mechanical Engineering) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Mechanical Engineering) and Economics (参见3.2节 工程与技术)
+- Bachelor of Engineering (Mechanical Engineering) with a Second Major in Society & Urban Systems (参见3.2节 工程与技术)
+- Bachelor of Engineering (Robotics) (参见3.2节 工程与技术)
+- Bachelor of Engineering (Robotics) with a Second Major in Society & Urban Systems (参见3.2节 工程与技术)
+- Bachelor of Engineering in Bioengineering with Second Major in Sustainability (参见3.2节 健康科学)
+- Bachelor of Engineering Science (参见3.2节 工程与技术)
+- Bachelor of Engineering Science with Double Major in Process Engineering and Synthetic Chemistry (参见3.2节 工程与技术)
+- Bachelor of Fine Arts (参见3.2节 人文与社会科学)
+- Bachelor of Medicine and Bachelor of Surgery (MBBS) (参见3.2节 健康科学)
+- Bachelor of Science (Education) (参见3.2节 其他专业)
+- Bachelor of Science (Sport Science and Management) (参见3.2节 其他专业)
+- Bachelor of Science in Applied Physics (参见3.2节 其他专业)
+- Bachelor of Science in Biological Sciences (参见3.2节 健康科学)
+- Bachelor of Science in Biological Sciences and Psychology (参见3.2节 健康科学)
+- Bachelor of Science in Biology and Education (参见3.2节 其他专业)
+- Bachelor of Science in Biomedical Sciences & Bachelor of Medicine (Chinese Medicine) (参见3.2节 健康科学)
+- Bachelor of Science in Biomedical Sciences and BioBusiness (参见3.2节 健康科学)
+- Bachelor of Science in Chemistry and Biological Chemistry (参见3.2节 其他专业)
+- Bachelor of Science in Chemistry and Biological Chemistry with Second Major in Environmental Science (参见3.2节 其他专业)
+- Bachelor of Science in Chemistry and Biological Chemistry with Second Major in Sustainability (参见3.2节 其他专业)
+- Bachelor of Science in Chemistry and Education (参见3.2节 其他专业)
+- Bachelor of Science in Data Science and Artificial Intelligence (参见3.2节 信息技术与计算机科学)
+- Bachelor of Science in Economics & Data Science (参见3.2节 其他专业)
+- Bachelor of Science in Environmental Earth Systems Science (参见3.2节 其他专业)
+- Bachelor of Science in Environmental Earth Systems Science and Public Policy & Global Affairs (参见3.2节 其他专业)
+- Bachelor of Science in Environmental Earth Systems Science with 2nd Major in Data Analytics (ESDA) (参见3.2节 其他专业)
+- Bachelor of Science in Environmental Earth Systems Science with 2nd Major in Entrepreneurship (ESET) (参见3.2节 其他专业)
+- Bachelor of Science in Environmental Earth Systems Science with 2nd Major in Sustainability (ESSN) (参见3.2节 其他专业)
+- Bachelor of Science in Mathematical and Computer Sciences (参见3.2节 信息技术与计算机科学)
+- Bachelor of Science in Mathematical Sciences (参见3.2节 其他专业)
+- Bachelor of Science in Mathematical Sciences and Economics (参见3.2节 其他专业)
+- Bachelor of Science in Mathematics & Computational Thinking and Education (参见3.2节 其他专业)
+- Bachelor of Science in Mathematics and Economics (参见3.2节 其他专业)
+- Bachelor of Science in Physics & Energy Studies and Education (参见3.2节 其他专业)
+- Bachelor of Science in Physics and Mathematical Sciences (参见3.2节 其他专业)
+- Bachelor of Science in Sport Science and Education (参见3.2节 其他专业)
+- Bachelor of Social Sciences in Economics (参见3.2节 人文与社会科学)
+- Bachelor of Social Sciences in Economics and Media Analytics (参见3.2节 人文与社会科学)
+- Bachelor of Social Sciences in Economics and Psychology (参见3.2节 人文与社会科学)
+- Bachelor of Social Sciences in Economics and Public Policy & Global Affairs (参见3.2节 人文与社会科学)
+- Bachelor of Social Sciences in Psychology (参见3.2节 人文与社会科学)
+- Bachelor of Social Sciences in Psychology and Media Analytics (参见3.2节 人文与社会科学)
+- Bachelor of Social Sciences in Public Policy and Global Affairs (参见3.2节 人文与社会科学)
+- Bachelor of Social Sciences in Sociology (参见3.2节 人文与社会科学)
+- Bachelor of Technology in Computing (A SkillsFuture Work-Study Degree) (参见3.2节 信息技术与计算机科学)
+- Computing (参见3.2节 信息技术与计算机科学)
+- Double Degree in Accountancy and Data Science & Artificial Intelligence (参见3.2节 商科)
+- Double Degree Business and Accountancy (参见3.2节 商科)
+- Double Degree in Bachelor of Engineering in Environmental Engineering and Bachelor of Social Science in Economics (参见3.2节 工程与技术)
+- Minor in Archaeology (参见3.2节 人文与社会科学)
+- Minor in Art History (参见3.2节 人文与社会科学)
+- Minor in Artificial Intelligence (参见3.2节 信息技术与计算机科学)
+- Minor in Chinese (参见3.2节 人文与社会科学)
+- Minor in Chinese Creative Writing (参见3.2节 人文与社会科学)
+- Minor in Communication Studies (参见3.2节 人文与社会科学)
+- Minor in Creative Writing (参见3.2节 人文与社会科学)
+- Minor in Design and Systems Thinking (参见3.2节 工程与技术)
+- Minor in Economics (参见3.2节 人文与社会科学)
+- Minor in English (参见3.2节 人文与社会科学)
+- Minor in Environmental Humanities (参见3.2节 人文与社会科学)
+- Minor in Film (参见3.2节 人文与社会科学)
+- Minor in Gender and Diversity Studies (参见3.2节 人文与社会科学)
+- Minor in Geography and Urban Studies (参见3.2节 人文与社会科学)
+- Minor in Global Asia (参见3.2节 人文与社会科学)
+- Minor in Health and Society (参见3.2节 人文与社会科学)
+- Minor in History (参见3.2节 人文与社会科学)
+- Minor in Linguistics and Multilingual Studies (参见3.2节 人文与社会科学)
+- Minor in Modern Languages (参见3.2节 人文与社会科学)
+- Minor in Philosophy (参见3.2节 人文与社会科学)
+- Minor in Photography (参见3.2节 人文与社会科学)
+- Minor in Psychology (参见3.2节 人文与社会科学)
+- Minor in Public Policy and Global Affairs (参见3.2节 人文与社会科学)
+- Minor in Science, Technology, and Society (参见3.2节 人文与社会科学)
+- Minor in Sociology (参见3.2节 人文与社会科学)
+- Minor in Systems Management (参见3.2节 工程与技术)
+- Minor in Translation (参见3.2节 人文与社会科学)
+- Philosophy, Politics, and Economics (参见3.2节 人文与社会科学)
+- Second Major in Business (参见3.2节 商科)
+- Second Major in Business (International Trading Programme (ITP)) (参见3.2节 商科)
+- Second Major in Data Analytics (参见3.2节 信息技术与计算机科学)
+- Second Major in Entrepreneurship (参见3.2节 商科)
+- Second Major in Sustainability (参见3.2节 其他专业)
+
+**停办项目**：
+- Bachelor of Science in Biomedical Sciences & Bachelor of Medicine (Chinese Medicine) (参见3.2节 健康科学) (停办过渡期，截止日期：2025-08-31)
+
+**文凭 (Diploma)**（共5个项目）
+- Postgraduate Diploma in Education (Junior College) (参见3.2节 人文与社会科学)
+- Postgraduate Diploma in Education (Physical Education - Primary) (参见3.2节 人文与社会科学)
+- Postgraduate Diploma in Education (Physical Education - Secondary) (参见3.2节 人文与社会科学)
+- Postgraduate Diploma in Education (Primary) (参见3.2节 人文与社会科学)
+- Postgraduate Diploma in Education (Secondary) (参见3.2节 人文与社会科学)
+
+**证书/基础项目 (Certificate/Foundation)**（共12个项目）
+- Certificate Programme in Sustainable Finance (参见3.2节 其他专业)
+- Ethics and Civics in a Multicultural World (CC0003)
+- Executive Certificate in Carbon Markets (参见3.2节 商科)
+- Executive Certificate in Corporate and Environmental Sustainability (参见3.2节 商科)
+- Executive Certificate in Engineering Leadership
+- FlexiMasters in Business AI and Technology (参见3.2节 商科)
+- FlexiMasters in Sustainability Business Ecosystems (参见3.2节 商科)
+- Graduate Certificate in Sustainability - Strategy, Energy, Environment, and Circularity (参见3.2节 其他专业)
+- Healthy Living and Wellbeing (CC0005)
+- Making and Tinkering courses
+- Musculoskeletal (MSK) Ultrasound Course (参见3.2节 健康科学)
+- Professional Certificate in Chartered Engineer (SG) in Sustainability (参见3.2节 工程与技术)
+- Science and Technology for Humanity (CC0007)
+- Sports Medicine Theory Course (参见3.2节 健康科学)
+- Sustainability: Society, Economy and Environment (CC0006)
+
+### 3.4 特殊项目与中心
+
+**特殊学术项目 (Special Academic Programmes)**（共12个项目）
+- Accelerated Bachelor's Programme (ABP)
+- CN Yang Scholars Programme (CNYSP)
+- Global Connect Fellowship (GCF)
+- National Graduate Research Innovation Programme (GRIP)
+- NTU Entrepreneurship & Startup Training Programme (NEST)
+- NTU Honours College
+- NTU-NIE Teaching Scholars Programme (TSP)
+- Renaissance Engineering Scholars Programme (REP)
+- Turing AI Scholars Programme (TAISP)
+- University Scholars Programme (USP)
+- Venture Building Programme
+- Work Study Degree Programme (WSDEG)
+
+**国际交流项目 (International Exchange Programmes)**（共9个项目）
+- GEM Discoverer ASEAN Summer Programme
+- GEM Discoverer Language Immersion Programme (LIP)
+- GEM Discoverer Special Programmes
+- GEM Discoverer Summer Studies
+- GEM Discoverer Winter Prelude
+- GEM Discoverer Winter Studies
+- GEM Explorer (Semester Exchange)
+- GEM VEnturer (Virtual Education)
+- Singapore Universities Student Exchange Programme (SUSEP)
+
+**其他项目 (Other Programmes)**（共2个项目）
+- Looking China Project
+- Overseas Community Engagement Projects (OCEP)

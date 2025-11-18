@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card"
 import { useTheme } from "@/components/theme-provider"
 import { WorkflowStep } from "@/components/workflow-step"
 import { StudentProfileForm } from "@/components/student-profile-form"
-import { ArrowLeft, Moon, Sun, Music, CheckCircle2, Loader2 } from "lucide-react"
+import { ArrowLeft, Moon, Sun, Music, CheckCircle2, Loader2, RefreshCw } from "lucide-react"
 import { apiClient, normalizeApiUrl, apiBaseURL } from "@/lib/api/client"
 import { useToast } from "@/hooks/use-toast"
 import type { AudioItem, StudentProfile } from "@/lib/types/dreambridge-api-types"
@@ -1033,33 +1033,50 @@ export function WorkflowPage({ projectId }: { projectId: string }) {
                   </div>
                 </div>
 
-                {/* 下载按钮 */}
-                {audio.ppt_url && (
+                {/* 下载按钮和重新推理按钮 */}
+                {audio && (audio.has_ppt || audio.ppt_url) && (
                   <div className="flex flex-col gap-3 pt-2">
-                    <button
-                      onClick={async () => {
-                        try {
-                          const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
-                          console.log("开始下载 PPT，profileName:", profileName)
-                          await apiClient.downloadPPT(profileName)
+                    <div className="flex items-center gap-3 flex-wrap">
+                      {audio.ppt_url && (
+                        <button
+                          onClick={async () => {
+                            try {
+                              const profileName = audioName.replace(/\.(wav|mp3|m4a|mp4)$/i, "-student_profile.json")
+                              console.log("开始下载 PPT，profileName:", profileName)
+                              await apiClient.downloadPPT(profileName)
+                              toast({
+                                title: "下载成功",
+                                description: "PPT 文稿已开始下载",
+                              })
+                            } catch (error) {
+                              console.error("下载 PPT 失败:", error)
+                              toast({
+                                title: "下载失败",
+                                description: error instanceof Error ? error.message : "未知错误",
+                                variant: "destructive",
+                              })
+                            }
+                          }}
+                          className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg active:shadow-sm flex items-center justify-center gap-2"
+                        >
+                          <span>↓</span>
+                          <span>下载 PPT 文稿</span>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => {
+                          // TODO: 实现重新推理规划功能
                           toast({
-                            title: "下载成功",
-                            description: "PPT 文稿已开始下载",
+                            title: "功能开发中",
+                            description: "重新推理规划功能即将上线",
                           })
-                        } catch (error) {
-                          console.error("下载 PPT 失败:", error)
-                          toast({
-                            title: "下载失败",
-                            description: error instanceof Error ? error.message : "未知错误",
-                            variant: "destructive",
-                          })
-                        }
-                      }}
-                      className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg active:shadow-sm flex items-center justify-center gap-2 w-fit"
-                    >
-                      <span>↓</span>
-                      <span>下载 PPT 文稿</span>
-                    </button>
+                        }}
+                        className="px-6 py-2.5 border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg active:shadow-sm flex items-center justify-center gap-2"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                        <span>重新推理规划</span>
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
